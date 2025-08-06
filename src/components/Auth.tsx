@@ -1,4 +1,3 @@
-// src/components/Auth.tsx
 import { supabase,} from '../lib/supabaseClient'; //クライアントをインポートしている
 import React, { useState } from 'react';
 
