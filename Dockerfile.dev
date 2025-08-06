@@ -1,0 +1,17 @@
+# Dockerfile.dev
+
+# ★ ベースイメージを node:18-slim に変更
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY package.json yarn.lock* ./
+
+# npmを使っているので、npm install に一本化
+RUN npm install
+
+COPY . .
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host"]

@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: tsuriupp-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      # ソースコードの変更をコンテナ内に同期
+      - ./src:/app/src
+      # node_modulesはコンテナ内のものを使い続ける
+      - /app/node_modules
