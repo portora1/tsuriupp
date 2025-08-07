@@ -5,12 +5,14 @@ import type { FishingLog } from "../App";
 
 export const Dashboard = () => {
     const { user } = useAuth();
+    
     const [logs, setLogs] = useState<FishingLog[]>([]);
     const [loading, setLoading] = useState(true);
 
     const [fishName, setFishName] = useState('');
     const [fishSize, setFishSize] = useState('');
     const [location, setLocation] = useState('');
+    const [comment, setComment] = useState('');
 
     useEffect(() => {
         const fetchLogs = async () => {
@@ -21,7 +23,7 @@ export const Dashboard = () => {
                 .from('fishing_logs')
                 .select('*')
                 .eq('user_id', user.id)
-                .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false }); //新しい順に並べる
             if(error) throw error;
             if(data) setLogs(data);
             } catch(error) {
@@ -47,16 +49,20 @@ export const Dashboard = () => {
                 fish_name: fishName,
                 fish_size: fishSize ? Number(fishSize) : null,
                 location: location,
+                comment: comment,
                 user_id: user.id,
+                fished_at: new Date().toISOString(),
               })
-              .select();
+              .select()
+              .single();
             if(error) throw error;
             if(data) {
-                setLogs([data[0], ...logs]);
+                setLogs([data, ...logs]);
             }
             setFishName('');
             setFishSize('');
             setLocation('');
+            setComment('');
         } catch (error) {
             console.error('Error inserting log:', error);
             alert('投稿に失敗しました。');
@@ -93,6 +99,12 @@ export const Dashboard = () => {
                     value={fishSize}
                     onChange={e => setFishSize(e.target.value)}
                     />
+                    <div>
+                        <label>コメント：</label>
+                        <textarea
+                        value={comment}
+                        onChange={e => setComment(e.target.value)}></textarea>
+                    </div>
                 </div>
                 <button type="submit">投稿する</button>
             </form>
@@ -106,6 +118,7 @@ export const Dashboard = () => {
                         <li key={log.id}>
                             <strong>{log.fish_name}</strong>
                             - {log.location}{log.fish_size && ` (${log.fish_size} cm)`}
+                          <p>{log.comment}</p>
                         </li>
                     ))}
                 </ul>
