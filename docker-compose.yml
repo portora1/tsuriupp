@@ -12,3 +12,5 @@ services:
       - ./src:/app/src
       # node_modulesはコンテナ内のものを使い続ける
       - /app/node_modules
+    env_file:
+      - .env.local
