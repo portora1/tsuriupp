@@ -6,7 +6,7 @@ import { useFishingLogs } from "../hooks/useFishingLogs";
 export const Dashboard = () => {
     const { user } = useAuth();
     
-    const { logs, loading, error, addLog } = useFishingLogs(user);
+    const { logs, loading, error, addLog, removeLog, updateLog } = useFishingLogs(user);
 
     const [fishName, setFishName] = useState('');
     const [fishSize, setFishSize] = useState('');
@@ -44,6 +44,44 @@ export const Dashboard = () => {
         } catch(err) {
             console.error('Error inserting log:', err);
             alert('投稿に失敗しました。');
+        }
+    };
+
+    const handleDelete = async (logId: number) => {
+        if (window.confirm('この釣果記録を本当に削除しますか？')) {
+            try {
+                const { error } = await supabase
+                .from('fishing_logs')
+                .delete()
+                .eq('id', logId);
+                if(error) throw error;
+
+                removeLog(logId);
+            } catch (err) {
+                console.error('Error deleting log:', err);
+                alert('削除に失敗しました。');
+            }
+        }
+    };
+
+    const handleUpdate = async (logId: number) => {
+        const newComment = window.prompt("新しいコメントを入力してください。","");
+        if (newComment !== null) {
+            try {
+                const { data, error } = await supabase
+                .from('fishing_logs')
+                .update({ comment: newComment })
+                .eq('id', logId)
+                .select()
+                .single();
+
+                if (error) throw error;
+
+                updateLog(data);
+            } catch (err) {
+                console.error('Error updating log:', err);
+                alert('更新に失敗しました。');
+            }
         }
     };
 
@@ -98,6 +136,8 @@ export const Dashboard = () => {
                             <strong>{log.fish_name}</strong>
                             - {log.location}{log.fish_size && ` (${log.fish_size} cm)`}
                           <p>{log.comment}</p>
+                          <button onClick={() => handleUpdate(log.id)}>編集</button>
+                          <button onClick={() => handleDelete(log.id)}>削除</button>
                         </li>
                     ))}
                 </ul>

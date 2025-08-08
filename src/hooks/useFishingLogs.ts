@@ -34,10 +34,18 @@ export const useFishingLogs = (user: User | null) => {
 
         fetchLogs();
     }, [user?.id]);
+
+    const removeLog = (logId: number) => {
+        setLogs(logs.filter(log => log.id !== logId));
+    };
+
+    const updateLog = (updateLog: FishingLog) => {
+        setLogs(logs.map(log => (log.id === updateLog.id ? updateLog : log)));
+    };
     
     const addLog = (newLog: FishingLog) => {
         setLogs([newLog, ...logs]);
     };
 
-    return { logs, loading, error, addLog};
+    return { logs, loading, error, addLog, removeLog, updateLog};
 };
