@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../contexts/AuthContext";
 import { useFishingLogs } from "../hooks/useFishingLogs";
+import type { FishingLog } from "../App";
 
 export const Dashboard = () => {
     const { user } = useAuth();
@@ -12,6 +13,13 @@ export const Dashboard = () => {
     const [fishSize, setFishSize] = useState('');
     const [location, setLocation] = useState('');
     const [comment, setComment] = useState('');
+
+    const [editingLogId, setEditingLogId] = useState<number | null>(null);
+
+    const [editingFishName, setEditingFishName] = useState('');
+    const [editingFishSize, setEditingFishSize] = useState('');
+    const [editingLocation, setEditingLocation] = useState('');
+    const [editingComment, setEditingComment] = useState('');
 
     const handleLogSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -64,24 +72,39 @@ export const Dashboard = () => {
         }
     };
 
-    const handleUpdate = async (logId: number) => {
-        const newComment = window.prompt("新しいコメントを入力してください。","");
-        if (newComment !== null) {
-            try {
-                const { data, error } = await supabase
-                .from('fishing_logs')
-                .update({ comment: newComment })
-                .eq('id', logId)
-                .select()
-                .single();
+    const handleEditStart = (log: FishingLog) => {
+        setEditingLogId(log.id);
+        setEditingFishName(log.fish_name);
+        setEditingFishSize(String(log.fish_size || ''));
+        setEditingLocation(log.location);
+        setEditingComment(log.comment || '')
+    };
 
-                if (error) throw error;
+    const handleEditCancel = () => {
+        setEditingLogId(null);
+    };
 
-                updateLog(data);
-            } catch (err) {
-                console.error('Error updating log:', err);
-                alert('更新に失敗しました。');
-            }
+    const handleEditSave = async (logId: number) => {
+        try {
+            const { data, error } = await supabase
+            .from('fishing_logs')
+            .update({
+                fish_name: editingFishName,
+                fish_size: editingFishSize ? Number(editingFishSize) : null,
+                location: editingLocation,
+                comment: editingComment,
+            })
+            .eq('id', logId)
+            .select()
+            .single();
+
+            if (error) throw error;
+
+            updateLog(data);
+            setEditingLogId(null);
+        } catch (err) {
+            console.error('Error updating log', err);
+            alert('更新に失敗しました。');
         }
     };
 
@@ -133,11 +156,40 @@ export const Dashboard = () => {
                 <ul>
                     {logs.map(log => (
                         <li key={log.id}>
-                            <strong>{log.fish_name}</strong>
-                            - {log.location}{log.fish_size && ` (${log.fish_size} cm)`}
-                          <p>{log.comment}</p>
-                          <button onClick={() => handleUpdate(log.id)}>編集</button>
-                          <button onClick={() => handleDelete(log.id)}>削除</button>
+                            {editingLogId === log.id ? (
+                            <div className="edit-form">
+                                <input
+                                type="text"
+                                value={editingFishName}
+                                onChange={e => setEditingFishName(e.target.value)} 
+                                />
+                                <input
+                                type="text"
+                                value={editingLocation}
+                                onChange={e => setEditingLocation(e.target.value)}
+                                />
+                                <input
+                                type="number"
+                                value={editingFishSize}
+                                onChange={e => setEditingFishSize(e.target.value)}
+                                />
+                                <textarea
+                                value={editingComment}
+                                onChange={e => setEditingComment(e.target.value)}
+                                ></textarea>
+                                <button onClick={() => handleEditSave(log.id)}>保存</button>
+                                <button onClick={handleEditCancel}>キャンセル</button>
+                            </div>
+
+                            ) : (
+                            <div>
+                              <strong>{log.fish_name}</strong>
+                              - {log.location}{log.fish_size && ` (${log.fish_size} cm)`}
+                              <p>{log.comment}</p>
+                              <button onClick={() => handleEditStart(log)}>編集</button>
+                              <button onClick={() => handleDelete(log.id)}>削除</button>
+                            </div>
+                          )}
                         </li>
                     ))}
                 </ul>
