@@ -1,40 +1,17 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../contexts/AuthContext";
-import type { FishingLog } from "../App";
+import { useFishingLogs } from "../hooks/useFishingLogs";
 
 export const Dashboard = () => {
     const { user } = useAuth();
     
-    const [logs, setLogs] = useState<FishingLog[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { logs, loading, error, addLog } = useFishingLogs(user);
 
     const [fishName, setFishName] = useState('');
     const [fishSize, setFishSize] = useState('');
     const [location, setLocation] = useState('');
     const [comment, setComment] = useState('');
-
-    useEffect(() => {
-        const fetchLogs = async () => {
-            if(!user) return;
-            try {
-                setLoading(true);
-                const { data, error} = await supabase
-                .from('fishing_logs')
-                .select('*')
-                .eq('user_id', user.id)
-                .order('created_at', { ascending: false }); //新しい順に並べる
-            if(error) throw error;
-            if(data) setLogs(data);
-            } catch(error) {
-                console.error('Error fetching logs:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-    
-        fetchLogs();
-    },[user]);
 
     const handleLogSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -43,34 +20,36 @@ export const Dashboard = () => {
             return;
         }
         try {
-            const { data, error } = await supabase
-              .from('fishing_logs')
-              .insert({
+            const {data, error: insertError } = await supabase
+            .from('fishing_logs')
+            .insert({
                 fish_name: fishName,
                 fish_size: fishSize ? Number(fishSize) : null,
                 location: location,
                 comment: comment,
                 user_id: user.id,
                 fished_at: new Date().toISOString(),
-              })
-              .select()
-              .single();
-            if(error) throw error;
-            if(data) {
-                setLogs([data, ...logs]);
-            }
-            setFishName('');
-            setFishSize('');
-            setLocation('');
-            setComment('');
-        } catch (error) {
-            console.error('Error inserting log:', error);
+            })
+            .select()
+            .single();
+        
+        if (insertError) throw insertError;
+
+        addLog(data);
+
+        setFishName('')
+        setFishSize('');
+        setLocation('');
+        setComment('');
+        } catch(err) {
+            console.error('Error inserting log:', err);
             alert('投稿に失敗しました。');
         }
     };
-    if (loading) {
-        return <div>釣果を読み込み中...</div>;
-    }
+
+    if (loading) return <div>釣果を読み込み中...</div>;
+    if (error) return <div>エラー： {error}</div>;
+
     return (
         <div>
             <h1>釣りアップっぷ</h1>
