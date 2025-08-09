@@ -2,6 +2,7 @@ import { Auth } from "./components/Auth";
 import { useAuth } from "./contexts/AuthContext";
 import { supabase } from "./lib/supabaseClient";
 import { Dashboard } from "./components/Dashboard";
+import './App.scss';
 
 export type FishingLog = {
   id:number;
