@@ -84,7 +84,19 @@ export const Dashboard = () => {
         setEditingLogId(null);
     };
 
-    const handleEditSave = async (logId: number) => {
+    const handleEditSave = async (logToUpdate: FishingLog) => {
+
+        const isChanged =
+          logToUpdate.fish_name !== editingFishName 
+          || String(logToUpdate.fish_size || '') !== editingFishSize
+          || logToUpdate.location !== editingLocation
+          || (logToUpdate.comment || '') !== editingComment;
+
+          if(!isChanged) {
+            handleEditCancel();
+            return;
+          }
+
         try {
             const { data, error } = await supabase
             .from('fishing_logs')
@@ -94,7 +106,7 @@ export const Dashboard = () => {
                 location: editingLocation,
                 comment: editingComment,
             })
-            .eq('id', logId)
+            .eq('id', logToUpdate.id)
             .select()
             .single();
 
@@ -102,6 +114,7 @@ export const Dashboard = () => {
 
             updateLog(data);
             setEditingLogId(null);
+
         } catch (err) {
             console.error('Error updating log', err);
             alert('更新に失敗しました。');
@@ -157,6 +170,7 @@ export const Dashboard = () => {
                     {logs.map(log => (
                         <li key={log.id}>
                             {editingLogId === log.id ? (
+                                // 編集フォーム
                             <div className="edit-form">
                                 <input
                                 type="text"
@@ -177,7 +191,7 @@ export const Dashboard = () => {
                                 value={editingComment}
                                 onChange={e => setEditingComment(e.target.value)}
                                 ></textarea>
-                                <button onClick={() => handleEditSave(log.id)}>保存</button>
+                                <button onClick={() => handleEditSave(log)}>保存</button>
                                 <button onClick={handleEditCancel}>キャンセル</button>
                             </div>
 

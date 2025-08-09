@@ -9,8 +9,10 @@ services:
       - "5173:5173"
     volumes:
       # ソースコードの変更をコンテナ内に同期
-      - ./src:/app/src
+      - ./src:/app/src:cached
       # node_modulesはコンテナ内のものを使い続ける
       - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     env_file:
       - .env.local

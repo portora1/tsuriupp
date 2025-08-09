@@ -1,0 +1,31 @@
+//共通スタイル
+
+$primary-color: #ff009d;
+
+button {
+  padding: 8px 15px;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #444;
+}
+
+.edit-form {
+  display: flex;
+  gap: 10px;
+
+  button {
+    background-color: $primary-color;
+    color: rgb(255, 0, 0);
+  }
+}
