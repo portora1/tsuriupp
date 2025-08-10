@@ -1,75 +1,92 @@
-import { supabase,} from '../lib/supabaseClient'; //クライアントをインポートしている
 import { useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
 
 export const Auth = () => {
+    const [isLoginMode, setIsLoginMode] = useState(true);
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
 
-    //ログイン・サインアップ機能を１つの関数にまとめる
-    const handleAuth = async (isLogin: boolean) => {
+    const handleAuth = async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
             setLoading(true);
-            // Supabaseのパスワード関数を呼び出す
-            let error;
-            if (isLogin) {
-                //ログイン処理の部分
-                ({ error } = await supabase.auth.signInWithPassword({email, password }));
+            if (isLoginMode) {
+                const { error}  = await supabase.auth.signInWithPassword({ email, password });
+                if(error) throw error;
             } else {
-                //サインアップ処理の部分
-                ({ error } = await supabase.auth.signUp({ email, password }));
-            }
-            
-            if (error) throw error;
-            if (isLogin) {
-                alert('ログインしました！')
-            } else {
-                alert('確認メールを送信しました！メールを確認して、リンクをクリックしてください。');
-            }
-            } catch (error: any) {
-                alert(error.message || 'エラーが発生しました。');
-            } finally {
+                if(!username) {
+                alert('ユーザー名を入力して下さい。');
                 setLoading(false);
+                return;
             }
+            const { error } = await supabase.auth.signUp({
+                email,
+                password,
+                options: { data: { username: username } },
+            });
+            if (error) throw error;
+            alert('確認メールを送信しました！');
         }
-
+    } catch (error: any) {
+        alert(error.message || 'エラーが発生しました。');
+    } finally {
+        setLoading(false);
+    }
+};
 
     return (
         <div>
-            <h2>釣りアップっぷ ログイン</h2>
-            <p>メールアドレスとパスワードでログインまたは新規登録してください。</p>
-            <form onSubmit={(e) => e.preventDefault()}>
+            <h2>{isLoginMode ? '釣りアップっぷ ログイン' : '新規登録'}</h2>
+            <form onSubmit={handleAuth}>
+                {!isLoginMode && (
+                    <div>
+                        <label htmlFor="username">ユーザー名</label>
+                        <input
+                        id="username"
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    </div>
+                )}
                 <div>
                     <label htmlFor="email">メールアドレス</label>
                     <input
-                      id="email"
-                      type="email"
-                      placeholder="your@email.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
+                    id="email"
+                    type="email"                        
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+               />
                 </div>
                 <div>
-                <label htmlFor="password">パスワード</label>
-                <input
-                  id="password"
-                  type="password"
-                  placeholder="........"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  />
+                    <label htmlFor="password">パスワード</label>
+                    <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
                 </div>
-                <div>
-                    {/*ログインボタン*/}
-                    <button onClick={() => handleAuth(true)} disabled={loading}>
-                        {loading ? <span>処理中...</span> : <span>ログイン</span>}
-                    </button>
-                    {/*新規登録ボタン*/}
-                    <button onClick= {() =>handleAuth(false)} disabled={loading}>
-                        {loading ? <span>処理中...</span> : <span>新規登録</span>}
-                    </button>
-                </div>
+                <button type="submit" disabled={loading}>
+                    {loading ? '処理中...' : (isLoginMode ? 'ログイン' : '新規登録')}
+                </button>
             </form>
+
+            <hr />
+            <div>
+                <p>
+                  {isLoginMode ? 'アカウントをお持ちでないですか？' : 'すでにアカウントをお持ちですか？'}
+                </p>
+                <button
+                    type="button"
+                    onClick={() => setIsLoginMode(!isLoginMode)}
+                >
+                    {isLoginMode ? '新規登録' : 'ログイン'}
+                </button>
+            </div>
         </div>
     );
 };
+

@@ -26,7 +26,7 @@ function App() {
     <div className="App">
       {session && user && (
         <div className="app-header">
-          <p>ようこそ、{user.email}さん！</p>
+          <p>ようこそ、{user.user_metadata.username || user.email}さん！</p>
           <button onClick={() => supabase.auth.signOut()}>ログアウト</button>
           </div>
           )}
