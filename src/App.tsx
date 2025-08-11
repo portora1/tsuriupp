@@ -23,7 +23,7 @@ const AppLayout = () => {
     <div>
       <header className='app-header'>
         <nav>
-          <Link to="/dashboad">ダッシュボード</Link> | <Link to ="/profile">プロフィール</Link>
+          <Link to="/dashboard">ダッシュボード</Link> | <Link to ="/profile">プロフィール</Link>
         </nav>
         <div>
           <span>ようこそ、{user?.user_metadata.username || user?.email}さん！</span>
