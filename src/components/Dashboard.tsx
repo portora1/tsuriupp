@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabaseClient";
 import { useAuth } from "../contexts/AuthContext";
 import { useFishingLogs } from "../hooks/useFishingLogs";
 import type { FishingLog } from "../App";
+import { useStorage } from "../hooks/useStorage";
 
 export const Dashboard = () => {
     const { user } = useAuth();
@@ -13,6 +14,7 @@ export const Dashboard = () => {
     const [fishSize, setFishSize] = useState('');
     const [location, setLocation] = useState('');
     const [comment, setComment] = useState('');
+    const [imageFile, setImageFile] = useState<File | null>(null);
 
     const [editingLogId, setEditingLogId] = useState<number | null>(null);
 
@@ -21,6 +23,8 @@ export const Dashboard = () => {
     const [editingLocation, setEditingLocation] = useState('');
     const [editingComment, setEditingComment] = useState('');
 
+    const { isUploading, uploadImage } = useStorage('fishing-images');
+
     const handleLogSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if(!user || !fishName || !location) {
@@ -28,6 +32,11 @@ export const Dashboard = () => {
             return;
         }
         try {
+            let imageUrl: string | null = null;
+
+            if (imageFile) {
+                imageUrl = await uploadImage(imageFile);
+            }
             const {data, error: insertError } = await supabase
             .from('fishing_logs')
             .insert({
@@ -37,6 +46,7 @@ export const Dashboard = () => {
                 comment: comment,
                 user_id: user.id,
                 fished_at: new Date().toISOString(),
+                image_url: imageUrl,
             })
             .select()
             .single();
@@ -49,9 +59,10 @@ export const Dashboard = () => {
         setFishSize('');
         setLocation('');
         setComment('');
-        } catch(err) {
+        setImageFile(null);
+        } catch(err: any) {
             console.error('Error inserting log:', err);
-            alert('投稿に失敗しました。');
+            alert(err.message || '投稿に失敗しました。');
         }
     };
 
@@ -158,8 +169,21 @@ export const Dashboard = () => {
                         value={comment}
                         onChange={e => setComment(e.target.value)}></textarea>
                     </div>
+                    <div>
+                        <label htmlFor="image-upload">写真</label>
+                        <input
+                            id="image-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>{
+                                if(e.target.files && e.target.files[0]) {
+                                    setImageFile(e.target.files[0]);
+                                }
+                            }}
+                        />
+                    </div>
                 </div>
-                <button type="submit">投稿する</button>
+                <button type="submit" disabled={isUploading}>{isUploading ? '投稿中...' : '投稿する'}</button>
             </form>
 
             <hr />
