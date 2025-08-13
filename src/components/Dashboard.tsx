@@ -14,21 +14,22 @@ export const Dashboard = () => {
     const [fishSize, setFishSize] = useState('');
     const [location, setLocation] = useState('');
     const [comment, setComment] = useState('');
+    const [fishweight, setFishWeitht ] = useState('');
     const [imageFile, setImageFile] = useState<File | null>(null);
 
     const [editingLogId, setEditingLogId] = useState<number | null>(null);
 
     const [editingFishName, setEditingFishName] = useState('');
     const [editingFishSize, setEditingFishSize] = useState('');
-    const [editingLocation, setEditingLocation] = useState('');
-    const [editingComment, setEditingComment] = useState('');
+    const [editingLocation, setEditingLocation] = useState<string | null>('');
+    const [editingComment, setEditingComment] = useState<string | null>('');
 
     const { isUploading, uploadImage } = useStorage('fishing-images');
 
     const handleLogSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if(!user || !fishName || !location) {
-            alert('魚の名前と場所は必須です。');
+        if(!user || !fishName) {
+            alert('魚の名前は必須です。');
             return;
         }
         try {
@@ -42,6 +43,7 @@ export const Dashboard = () => {
             .insert({
                 fish_name: fishName,
                 fish_size: fishSize ? Number(fishSize) : null,
+                fish_weight: fishweight ? Number(fishweight) : null,
                 location: location,
                 comment: comment,
                 user_id: user.id,
@@ -57,8 +59,10 @@ export const Dashboard = () => {
 
         setFishName('')
         setFishSize('');
+        setFishWeitht('');
         setLocation('');
         setComment('');
+        setFishWeitht('');
         setImageFile(null);
         } catch(err: any) {
             console.error('Error inserting log:', err);
@@ -88,7 +92,7 @@ export const Dashboard = () => {
         setEditingFishName(log.fish_name);
         setEditingFishSize(String(log.fish_size || ''));
         setEditingLocation(log.location);
-        setEditingComment(log.comment || '')
+        setEditingComment(log.comment)
     };
 
     const handleEditCancel = () => {
@@ -153,7 +157,7 @@ export const Dashboard = () => {
                     <input
                     type="text"
                     value={location}
-                    onChange={e => setLocation(e.target.value)} required
+                    onChange={e => setLocation(e.target.value)}
                     />
                 </div>
                 <div>
@@ -163,25 +167,33 @@ export const Dashboard = () => {
                     value={fishSize}
                     onChange={e => setFishSize(e.target.value)}
                     />
-                    <div>
-                        <label>コメント：</label>
-                        <textarea
-                        value={comment}
-                        onChange={e => setComment(e.target.value)}></textarea>
-                    </div>
-                    <div>
-                        <label htmlFor="image-upload">写真</label>
-                        <input
-                            id="image-upload"
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) =>{
-                                if(e.target.files && e.target.files[0]) {
-                                    setImageFile(e.target.files[0]);
-                                }
-                            }}
-                        />
-                    </div>
+                </div>
+                <div>
+                    <label>重さ (kg)</label>
+                    <input
+                    type="number"
+                    value={fishweight}
+                    onChange={e => setFishWeitht(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>コメント：</label>
+                    <textarea
+                    value={comment}
+                    onChange={e => setComment(e.target.value)}></textarea>
+                </div>
+                <div>
+                    <label htmlFor="image-upload">写真</label>
+                    <input
+                        id="image-upload"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>{
+                            if(e.target.files && e.target.files[0]) {
+                                setImageFile(e.target.files[0]);
+                            }
+                        }}
+                    />
                 </div>
                 <button type="submit" disabled={isUploading}>{isUploading ? '投稿中...' : '投稿する'}</button>
             </form>
@@ -203,7 +215,7 @@ export const Dashboard = () => {
                                 />
                                 <input
                                 type="text"
-                                value={editingLocation}
+                                value={editingLocation || ''}
                                 onChange={e => setEditingLocation(e.target.value)}
                                 />
                                 <input
@@ -212,7 +224,7 @@ export const Dashboard = () => {
                                 onChange={e => setEditingFishSize(e.target.value)}
                                 />
                                 <textarea
-                                value={editingComment}
+                                value={editingComment || ''}
                                 onChange={e => setEditingComment(e.target.value)}
                                 ></textarea>
                                 <button onClick={() => handleEditSave(log)}>保存</button>
@@ -222,7 +234,8 @@ export const Dashboard = () => {
                             ) : (
                             <div>
                               <strong>{log.fish_name}</strong>
-                              - {log.location}{log.fish_size && ` (${log.fish_size} cm)`}
+                              {log.location&& <span> - {log.location}</span>}
+                              {log.fish_size && <span> ({log.fish_size} cm)</span>}
                               <p>{log.comment}</p>
                               <button onClick={() => handleEditStart(log)}>編集</button>
                               <button onClick={() => handleDelete(log.id)}>削除</button>

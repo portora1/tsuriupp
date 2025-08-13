@@ -10,7 +10,8 @@ export type FishingLog = {
   created_at: string;
   fish_name: string;
   fish_size: number | null;
-  location: string;
+  fish_weight: number | null;
+  location: string | null;
   fished_at: string;
   comment: string | null;
   image_url: string | null;
