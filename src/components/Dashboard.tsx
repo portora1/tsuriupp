@@ -23,6 +23,7 @@ export const Dashboard = () => {
     const [editingFishSize, setEditingFishSize] = useState('');
     const [editingLocation, setEditingLocation] = useState<string | null>('');
     const [editingComment, setEditingComment] = useState<string | null>('');
+    const [editingFishWeight, setEdeitingFishtWeight] = useState('');
 
     const { isUploading, uploadImage } = useStorage('fishing-images');
 
@@ -208,25 +209,52 @@ export const Dashboard = () => {
                             {editingLogId === log.id ? (
                                 // 編集フォーム
                             <div className="edit-form">
-                                <input
-                                type="text"
-                                value={editingFishName}
-                                onChange={e => setEditingFishName(e.target.value)} 
-                                />
-                                <input
-                                type="text"
-                                value={editingLocation || ''}
-                                onChange={e => setEditingLocation(e.target.value)}
-                                />
+                                <div>
+                                    <label htmlFor="edit-fish-name">名前</label>
+                                    <input
+                                    id="edit-fish-name"
+                                    type="text"
+                                    value={editingFishName}
+                                    onChange={e => setEditingFishName(e.target.value)} 
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="edit-fish-location">場所</label>
+                                    <input
+                                    id="edit-fish-location"
+                                    type="text"
+                                    value={editingLocation || ''}
+                                    placeholder="例： 〇〇漁港"
+                                    onChange={e => setEditingLocation(e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="edit-fish-size">サイズ</label>
                                 <input
                                 type="number"
                                 value={editingFishSize}
+                                placeholder="cm"
                                 onChange={e => setEditingFishSize(e.target.value)}
                                 />
-                                <textarea
-                                value={editingComment || ''}
-                                onChange={e => setEditingComment(e.target.value)}
-                                ></textarea>
+                                </div>
+                                <div>
+                                    <label htmlFor="edit-fish-weight">重さ</label>
+                                    <input
+                                    id="edit-fish-weight"
+                                    type="number"
+                                    value={editingFishWeight}
+                                    placeholder="kg"
+                                    onChange={e => setEdeitingFishtWeight(e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="edit-comment">コメント</label>
+                                    <textarea
+                                    value={editingComment || ''}
+                                    placeholder="例：人生最大サイズ！"
+                                    onChange={e => setEditingComment(e.target.value)}
+                                    ></textarea>
+                                </div>
                                 <button onClick={() => handleEditSave(log)}>保存</button>
                                 <button onClick={handleEditCancel}>キャンセル</button>
                             </div>
