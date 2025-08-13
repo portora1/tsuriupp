@@ -1,69 +1,49 @@
-# React + TypeScript + Vite
+現在作成中
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+釣果一覧アプリ(React + TypeScript + Vite)
+React,TypeScript,Viteを使用して作成した釣果を保存・投稿できるアプリです。
+コードを書くためにAIに聞きながら作成して、dockerを使用して最後はデプロイして友人が使える状態までを目指してます。
 
-Currently, two official plugins are available:
+今回気をつける内容として、
+１、作業内容のコミット　２、作成時間　３、エラー内容の理解　４、コメント機能を利用する　５、可読性の向上　６、責務をファイルで分ける
+をやっていきたいです
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+取り入れたい機能
+・docker
+・デプロイ
 
-## Expanding the ESLint configuration
+主な機能
+・
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+セットアップと実行方法
+このAPPを動かすにはいくつくかの APIキーの設定が必要です。
+1. プロジェクトのクローンと依存関係のインストール
+```bash
+git clone https://github/com/portora1/weather-app.git
+cd weather-app
+yarn install
+or
+npm install
 ```
+2. APIキーの準備
+以下の二つのAPIサービスから、無料でAPIキーを取得してください。
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+3. 環境変数の設定
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+
 ```
+この.env.localファイルはGitの管理対象から除外されてるので、キーをGitHubにアップロードしないでください。
+
+4. 開発サーバー起動
+```bash
+yarn dev
+or
+npm run dev
+```
+ブラウザでhttp://localhost:5173 にアクセスしてください。
+使用技術
+React
+TypeScript
+Vite
