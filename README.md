@@ -1,7 +1,7 @@
 現在作成中
 
 釣果一覧アプリ(React + TypeScript + Vite)
-React,TypeScript,Viteを使用して作成した釣果を保存・投稿できるアプリです。
+React,TypeScript,Vite,docker,supabaseを使用して作成した釣果を保存・投稿できるアプリです。
 コードを書くためにAIに聞きながら作成して、dockerを使用して最後はデプロイして友人が使える状態までを目指してます。
 
 今回気をつける内容として、
@@ -13,7 +13,7 @@ React,TypeScript,Viteを使用して作成した釣果を保存・投稿でき�
 ・デプロイ
 
 主な機能
-・
+・supabase
 
 セットアップと実行方法
 このAPPを動かすにはいくつくかの APIキーの設定が必要です。
