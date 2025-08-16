@@ -21,8 +21,6 @@ export const useStorage = (bucketName: string) => {
             const { data: urlData } = supabase.storage
                 .from(bucketName)
                 .getPublicUrl(filePath);
-            if (uploadError) throw uploadError;
-            
             return urlData.publicUrl;
         } catch (error) {
             console.error('Error uploading image:', error);
@@ -32,5 +30,23 @@ export const useStorage = (bucketName: string) => {
         }
     };
 
-    return { isUploading, uploadImage };
+    const deleteImage = async (filePath: string) => {
+        if (!user) return;
+        try {
+            const pathParts = filePath.split('/');
+            const fileName = pathParts.pop();
+            const userFolder = pathParts.pop();
+            if (userFolder !== user.id) {
+                throw new Error("You don't have permission to delete this file.");
+            }
+            const { error } = await supabase.storage
+                .from(bucketName)
+                .remove([`${userFolder}/${fileName}`]);
+                if (error) throw error;
+        } catch (err) {
+            console.error('Error deleting image:', err);
+        }
+    };
+
+    return { isUploading, uploadImage, deleteImage };
 };

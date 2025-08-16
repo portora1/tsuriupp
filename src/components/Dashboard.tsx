@@ -9,7 +9,9 @@ export const Dashboard = () => {
     const { user } = useAuth();
     
     const { logs, loading, error, addLog, removeLog, updateLog } = useFishingLogs(user);
+    const { isUploading, uploadImage, deleteImage } = useStorage('fishing-images');
 
+    //投稿フォーム用
     const [fishName, setFishName] = useState('');
     const [fishSize, setFishSize] = useState('');
     const [location, setLocation] = useState('');
@@ -17,15 +19,16 @@ export const Dashboard = () => {
     const [fishweight, setFishWeitht ] = useState('');
     const [imageFile, setImageFile] = useState<File | null>(null);
 
+    //編集フォーム用
     const [editingLogId, setEditingLogId] = useState<number | null>(null);
-
     const [editingFishName, setEditingFishName] = useState('');
     const [editingFishSize, setEditingFishSize] = useState('');
     const [editingLocation, setEditingLocation] = useState<string | null>('');
     const [editingComment, setEditingComment] = useState<string | null>('');
     const [editingFishWeight, setEdeitingFishtWeight] = useState('');
+    const [editingImageFile, setEditingImageFile] = useState<File | null>(null);
 
-    const { isUploading, uploadImage } = useStorage('fishing-images');
+
 
     const handleLogSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,16 +74,18 @@ export const Dashboard = () => {
         }
     };
 
-    const handleDelete = async (logId: number) => {
+    const handleDelete = async (logToDelete: FishingLog) => {
         if (window.confirm('この釣果記録を本当に削除しますか？')) {
             try {
+                if(logToDelete.image_url) {
+                    await deleteImage(logToDelete.image_url)
+                }
                 const { error } = await supabase
                 .from('fishing_logs')
                 .delete()
-                .eq('id', logId);
+                .eq('id', logToDelete.id);
                 if(error) throw error;
-
-                removeLog(logId);
+                removeLog(logToDelete.id);
             } catch (err) {
                 console.error('Error deleting log:', err);
                 alert('削除に失敗しました。');
@@ -94,6 +99,8 @@ export const Dashboard = () => {
         setEditingFishSize(String(log.fish_size || ''));
         setEditingLocation(log.location);
         setEditingComment(log.comment)
+        setEdeitingFishtWeight(String(log.fish_weight || ''));
+        setEditingImageFile(null);
     };
 
     const handleEditCancel = () => {
@@ -101,36 +108,31 @@ export const Dashboard = () => {
     };
 
     const handleEditSave = async (logToUpdate: FishingLog) => {
-
-        const isChanged =
-          logToUpdate.fish_name !== editingFishName 
-          || String(logToUpdate.fish_size || '') !== editingFishSize
-          || logToUpdate.location !== editingLocation
-          || (logToUpdate.comment || '') !== editingComment;
-
-          if(!isChanged) {
-            handleEditCancel();
-            return;
-          }
-
         try {
+            let updatedImageUrl = logToUpdate.image_url;
+            if (editingImageFile) {
+                if (logToUpdate.image_url) {
+                    await deleteImage(logToUpdate.image_url);
+                }
+                updatedImageUrl = await uploadImage(editingImageFile);
+            }
             const { data, error } = await supabase
-            .from('fishing_logs')
-            .update({
-                fish_name: editingFishName,
-                fish_size: editingFishSize ? Number(editingFishSize) : null,
-                location: editingLocation,
-                comment: editingComment,
-            })
-            .eq('id', logToUpdate.id)
-            .select()
-            .single();
-
+                .from('fishing_logs')
+                .update({
+                    fish_name: editingFishName,
+                    fish_size: editingFishSize ? Number(editingFishSize) : null,
+                    fish_weight: editingFishWeight ? Number(editingFishWeight) : null,
+                    location: editingLocation,
+                    comment: editingComment,
+                    image_url: updatedImageUrl,
+                })
+                .eq('id', logToUpdate.id)
+                .select()
+                .single();
             if (error) throw error;
 
             updateLog(data);
             setEditingLogId(null);
-
         } catch (err) {
             console.error('Error updating log', err);
             alert('更新に失敗しました。');
@@ -143,61 +145,62 @@ export const Dashboard = () => {
     return (
         <div>
             <h1>釣りアップっぷ</h1>
-            <form onSubmit={handleLogSubmit}>
-                <h3>新しい釣果を記録</h3>
-                <div>
-                    <label>魚の名前</label>
-                    <input 
-                    type="text" 
-                    value={fishName} 
-                    onChange={e => setFishName(e.target.value)} required 
-                    />
-                </div>
-                <div>
-                    <label>場所</label>
-                    <input
-                    type="text"
-                    value={location}
-                    onChange={e => setLocation(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>サイズ(cm)</label>
-                    <input
-                    type="number"
-                    value={fishSize}
-                    onChange={e => setFishSize(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>重さ (kg)</label>
-                    <input
-                    type="number"
-                    value={fishweight}
-                    onChange={e => setFishWeitht(e.target.value)}
-                    />
-                </div>
-                <div>
-                    <label>コメント：</label>
-                    <textarea
-                    value={comment}
-                    onChange={e => setComment(e.target.value)}></textarea>
-                </div>
-                <div>
-                    <label htmlFor="image-upload">写真</label>
-                    <input
-                        id="image-upload"
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) =>{
-                            if(e.target.files && e.target.files[0]) {
-                                setImageFile(e.target.files[0]);
-                            }
-                        }}
-                    />
-                </div>
-                <button type="submit" disabled={isUploading}>{isUploading ? '投稿中...' : '投稿する'}</button>
-            </form>
+            {/*投稿フォーム*/}
+                <form onSubmit={handleLogSubmit}>
+                    <h3>新しい釣果を記録</h3>
+                    <div>
+                        <label>魚の名前</label>
+                        <input 
+                        type="text" 
+                        value={fishName} 
+                        onChange={e => setFishName(e.target.value)} required 
+                        />
+                    </div>
+                    <div>
+                        <label>場所</label>
+                        <input
+                        type="text"
+                        value={location}
+                        onChange={e => setLocation(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>サイズ(cm)</label>
+                        <input
+                        type="number"
+                        value={fishSize}
+                        onChange={e => setFishSize(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>重さ (kg)</label>
+                        <input
+                        type="number"
+                        value={fishweight}
+                        onChange={e => setFishWeitht(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <label>コメント：</label>
+                        <textarea
+                        value={comment}
+                        onChange={e => setComment(e.target.value)}></textarea>
+                    </div>
+                    <div>
+                        <label htmlFor="image-upload">写真</label>
+                        <input
+                            id="image-upload"
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) =>{
+                                if(e.target.files && e.target.files[0]) {
+                                    setImageFile(e.target.files[0]);
+                                }
+                            }}
+                        />
+                    </div>
+                    <button type="submit" disabled={isUploading}>{isUploading ? '投稿中...' : '投稿する'}</button>
+                </form>
 
             <hr />
 
@@ -207,21 +210,21 @@ export const Dashboard = () => {
                     {logs.map(log => (
                         <li key={log.id}>
                             {editingLogId === log.id ? (
-                                // 編集フォーム
+                            // 編集フォーム
                             <div className="edit-form">
                                 <div>
-                                    <label htmlFor="edit-fish-name">名前</label>
+                                    <label htmlFor={`edit-fish-name-${log.id}`}>名前</label>
                                     <input
-                                    id="edit-fish-name"
+                                    id={`edit-fish-name-${log.id}`}
                                     type="text"
                                     value={editingFishName}
                                     onChange={e => setEditingFishName(e.target.value)} 
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="edit-fish-location">場所</label>
+                                    <label htmlFor={`edit-location-${log.id}`}>場所</label>
                                     <input
-                                    id="edit-fish-location"
+                                    id={`edit-location-${log.id}`}
                                     type="text"
                                     value={editingLocation || ''}
                                     placeholder="例： 〇〇漁港"
@@ -229,18 +232,19 @@ export const Dashboard = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="edit-fish-size">サイズ</label>
-                                <input
-                                type="number"
-                                value={editingFishSize}
-                                placeholder="cm"
-                                onChange={e => setEditingFishSize(e.target.value)}
+                                    <label htmlFor={`edit-fish-size-${log.id}`}>サイズ</label>
+                                    <input
+                                    id={`edit-fish-weight-${log.id}`}
+                                    type="number"
+                                    value={editingFishSize}
+                                    placeholder="cm"
+                                    onChange={e => setEditingFishSize(e.target.value)}
                                 />
                                 </div>
                                 <div>
-                                    <label htmlFor="edit-fish-weight">重さ</label>
+                                    <label htmlFor={`edit-fish-weight-${log.id}`}>重さ</label>
                                     <input
-                                    id="edit-fish-weight"
+                                    id={`edit-fish-weight-${log.id}`}
                                     type="number"
                                     value={editingFishWeight}
                                     placeholder="kg"
@@ -248,25 +252,42 @@ export const Dashboard = () => {
                                     />
                                 </div>
                                 <div>
-                                    <label htmlFor="edit-comment">コメント</label>
+                                    <label htmlFor={`edit-comment-${log.id}`}>コメント</label>
                                     <textarea
+                                    id={`edit-comment-${log.id}`}
                                     value={editingComment || ''}
                                     placeholder="例：人生最大サイズ！"
                                     onChange={e => setEditingComment(e.target.value)}
                                     ></textarea>
                                 </div>
+                                <div> 
+                                    <label>写真</label>
+                                    {log.image_url && !editingImageFile && <img src={log.image_url} alt="現在の写真" className="log-image" />}
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                           if (e.target.files && e.target.files[0]) {
+                                            setEditingImageFile(e.target.files[0]);
+                                            }
+                                        }}
+                                   />
+                                </div>
                                 <button onClick={() => handleEditSave(log)}>保存</button>
                                 <button onClick={handleEditCancel}>キャンセル</button>
                             </div>
-
                             ) : (
                             <div>
-                              <strong>{log.fish_name}</strong>
-                              {log.location&& <span> - {log.location}</span>}
-                              {log.fish_size && <span> ({log.fish_size} cm)</span>}
-                              <p>{log.comment}</p>
-                              <button onClick={() => handleEditStart(log)}>編集</button>
-                              <button onClick={() => handleDelete(log.id)}>削除</button>
+                                {log.image_url && <img src={log.image_url} alt={log.fish_name} className="log-image" />}
+                                <strong>{log.fish_name}</strong>
+                                {log.location&& <span> - {log.location}</span>}
+                                <div>
+                                    {log.fish_size && <span>サイズ: ({log.fish_size} cm)</span>}
+                                    {log.fish_weight && <span>/ 重さ: {log.fish_weight} kg</span>}
+                                </div>
+                            {log.comment && <p>{log.comment}</p>}
+                            <button onClick={() => handleEditStart(log)}>編集</button>
+                            <button onClick={() => handleDelete(log)}>削除</button>
                             </div>
                           )}
                         </li>
