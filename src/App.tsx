@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
 import { Auth } from "./components/Auth";
 import { useAuth } from "./contexts/AuthContext";
 import { supabase } from "./lib/supabaseClient";
-import { Dashboard } from "./components/Dashboard";
+import { Dashboard } from "./components/FishingDashboard";
 import { Profile } from './components/Profile';
 
 export type FishingLog = {
