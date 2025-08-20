@@ -57,7 +57,7 @@ export const DashboardContainer = () => {
 
     const handleUpdate = async (logToUpdate: FishingLog, updatedData: any) => {
 //画像が変更されたかチェック
-        const isImageChanged = !updatedData.imageFile;
+        const isImageChanged = !!updatedData.imageFile;
 //テキストが変更されたかチェック
         const isTextChanged = logToUpdate.fish_name !== updatedData.fishName ||
         String(logToUpdate.location || '') !== updatedData.location ||
