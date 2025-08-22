@@ -1,0 +1,13 @@
+.edit-form {
+  display: flex;
+  gap: 10px;
+
+  input,
+  textarea {
+    padding: 8px;
+    border: 1px solid #533;
+    background-color: #333;
+    color: white;
+    border-radius: 4px;
+  }
+}
