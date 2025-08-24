@@ -4,7 +4,6 @@ import { useAuth } from "./contexts/AuthContext";
 import { supabase } from "./lib/supabaseClient";
 import { Dashboard } from "./components/FishingDashboard";
 import { Profile } from './components/Profile';
-import styles from './App.module.scss';
 
 export type FishingLog = {
   id: number;
@@ -23,7 +22,7 @@ const AppLayout = () => {
   const { user } = useAuth();
   return (
     <div>
-      <header className={styles.appHeader}>
+      <header className="app-header">
         <nav>
           <Link to="/dashboard">ダッシュボード</Link> | <Link to ="/profile">プロフィール</Link>
         </nav>

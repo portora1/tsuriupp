@@ -30,36 +30,46 @@ export const FishingLogEditForm = ({ log, onSave, onCancel }: FishingLogEditForm
     return (
 
         <form onSubmit={handleSubmit} className="edit-form">
-            <input
-            type="text"
-            value={fishName}
-            onChange={e => setFishName(e.target.value)} 
-            placeholder="マダイ"
-            />
-            <input
-            type="text"
-            value={location || ''}
-            onChange={e => setLocation(e.target.value)}
-            placeholder="例：〇〇漁港"
-            />
-            <input
-            type="number"
-            value={fishSize}
-            onChange={e => setFishSize(e.target.value)}
-            placeholder="cm"
-            />
-            <input
-            type="number"
-            value={fishWeight}
-            onChange={e => setFishWeight(e.target.value)}
-            placeholder="kg"
-            />
-            <textarea
-            value={comment || ''}
-            onChange={e => setComment(e.target.value)}
-            placeholder="例：人生最大サイズ！"
-            ></textarea>
-            <div>
+            <div className="form-row">
+                <input
+                type="text"
+                value={fishName}
+                onChange={e => setFishName(e.target.value)} 
+                placeholder="マダイ"
+                />
+            </div>
+            <div className="form-row">
+                <input
+                type="text"
+                value={location || ''}
+                onChange={e => setLocation(e.target.value)}
+                placeholder="例：〇〇漁港"
+                />
+            </div>
+            <div className="form-row">
+                <input
+                type="number"
+                value={fishSize}
+                onChange={e => setFishSize(e.target.value)}
+                placeholder="cm"
+                />
+            </div>
+            <div className="form-row">
+                <input
+                type="number"
+                value={fishWeight}
+                onChange={e => setFishWeight(e.target.value)}
+                placeholder="kg"
+                />
+            </div>
+            <div className="form-row">
+                <textarea
+                value={comment || ''}
+                onChange={e => setComment(e.target.value)}
+                placeholder="例：人生最大サイズ！"
+                ></textarea>
+            </div>
+            <div className="form-row">
                 <label>写真</label>
                 {log.image_url && !imageFile && <img src={log.image_url} alt="現在の写真" className="log-image" />}
                 <input
@@ -70,9 +80,11 @@ export const FishingLogEditForm = ({ log, onSave, onCancel }: FishingLogEditForm
                         setImageFile(e.target.files[0]) }
                     }}
                 />
-            </div>
-        <button type="submit">保存</button>
-        <button type="button" onClick={onCancel}>キャンセル</button>
+        </div>
+        <div className="edit-form-actions">
+            <button type="submit">保存</button>
+            <button type="button" onClick={onCancel}>キャンセル</button>
+        </div>
     </form>
     );
 };

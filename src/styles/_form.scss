@@ -1,13 +1,47 @@
-.edit-form {
-  display: flex;
-  gap: 10px;
+@use './variables';
 
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  label {
+    width: 100px;
+    margin-right: 10px;
+    text-align: right;
+    flex-shrink: 0;
+  }
   input,
   textarea {
+    flex-grow: 1;
     padding: 8px;
-    border: 1px solid #533;
-    background-color: #333;
-    color: white;
     border-radius: 4px;
+    border: 1px solid variables.$border-color;
+    background-color: variables.$surface-color;
+    color: variables.$text-color;
   }
 }
+
+.log-form {
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  margin-bottom: 2rem;
+}
+
+.edit-form {
+  padding: 15px;
+  border: 1px dashed variables.$border-color;
+  border-radius: 8px;
+  input,
+  textarea {
+    padding: 6px;
+    font-size: 0.9em;
+  }
+  .edit-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+  }
+}
+

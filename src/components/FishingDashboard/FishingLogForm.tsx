@@ -35,9 +35,9 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
 
     {/*投稿フォーム*/}
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="log-form">
             <h3>新しい釣果を記録</h3>
-            <div>
+            <div className="form-row">
                 <label>魚の名前</label>
                 <input 
                 type="text" 
@@ -47,7 +47,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 required 
                 />
             </div>
-            <div>
+            <div className="form-row">
                 <label>場所</label>
                 <input
                 type="text"
@@ -56,7 +56,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 placeholder="例:糸島漁港"
                 />
             </div>
-            <div>
+            <div className="form-row">
                 <label>サイズ(cm)</label>
                 <input
                 type="number"
@@ -65,7 +65,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 placeholder="40"
                 />
             </div>
-            <div>
+            <div className="form-row">
                 <label>重さ (kg)</label>
                 <input
                 type="number"
@@ -74,14 +74,14 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 placeholder="3"
                 />
             </div>
-            <div>
+            <div className="form-row">
                 <label>コメント：</label>
                 <textarea
                 value={comment}
                 onChange={e => setComment(e.target.value)}
                 placeholder="例:自己ベスト更新！"></textarea>
             </div>
-            <div>
+            <div className="form-row">
                 <label htmlFor="image-upload">写真</label>
                 <input
                     id="image-upload"
