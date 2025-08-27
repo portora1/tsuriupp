@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { FishingLog } from "../../App";
 import { FishingLogEditForm } from "./FishingLogEditForm"
+import { useAuth  } from "../../contexts/AuthContext";
 
 type FishingLogItemProps = {
     log: FishingLog;
@@ -10,11 +11,14 @@ type FishingLogItemProps = {
 
 export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
+    const { user } = useAuth();
 
     const handleSave = (updatedData: any) => {
         onUpdate(log, updatedData);
         setIsEditing(false);
     };
+
+    const isOwnPost = user && user.id === log.user_id;
 
     return (
         <li key={log.id}>
@@ -30,12 +34,16 @@ export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) 
                         {log.fish_weight && <span>/ 重さ: {log.fish_weight} kg</span>}
                     </div>
                     {log.comment && <p>{log.comment}</p>}
-                    <button onClick= {() => setIsEditing(true)}>編集</button>
-                    <button onClick= {() => {
-                        if (window.confirm('この釣果記録を本当に削除しますか？')) {
-                            onDelete(log);
-                        }
-                    }}>削除</button>
+                    {isOwnPost && (
+                    <div>                    
+                        <button onClick= {() => setIsEditing(true)}>編集</button>
+                        <button onClick= {() => {
+                            if (window.confirm('この釣果記録を本当に削除しますか？')) {
+                                onDelete(log);
+                            }
+                        }}>削除</button>
+                    </div>
+                    )}
                 </div>
             )}
         </li>

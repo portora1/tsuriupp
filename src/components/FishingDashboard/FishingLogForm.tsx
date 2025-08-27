@@ -38,8 +38,9 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
         <form onSubmit={handleSubmit} className="log-form">
             <h3>新しい釣果を記録</h3>
             <div className="form-row">
-                <label>魚の名前</label>
-                <input 
+                <label htmlFor="fishName">魚の名前</label>
+                <input
+                id="fishName"
                 type="text" 
                 value={fishName}
                 onChange={e => setFishName(e.target.value)}
@@ -48,8 +49,9 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 />
             </div>
             <div className="form-row">
-                <label>場所</label>
+                <label htmlFor="location">場所</label>
                 <input
+                id="location"
                 type="text"
                 value={location}
                 onChange={e => setLocation(e.target.value)}
@@ -57,8 +59,9 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 />
             </div>
             <div className="form-row">
-                <label>サイズ(cm)</label>
+                <label htmlFor="fishSize">サイズ(cm)</label>
                 <input
+                id="fishSize"
                 type="number"
                 value={fishSize}
                 onChange={e => setFishSize(e.target.value)}
@@ -66,8 +69,9 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 />
             </div>
             <div className="form-row">
-                <label>重さ (kg)</label>
+                <label htmlFor="fishWeight">重さ (kg)</label>
                 <input
+                id="fishWeight"
                 type="number"
                 value={fishWeight}
                 onChange={e => setFishWeitht(e.target.value)}
@@ -75,8 +79,9 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 />
             </div>
             <div className="form-row">
-                <label>コメント：</label>
+                <label htmlFor="comment">コメント：</label>
                 <textarea
+                id="comment"
                 value={comment}
                 onChange={e => setComment(e.target.value)}
                 placeholder="例:自己ベスト更新！"></textarea>

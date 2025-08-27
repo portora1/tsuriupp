@@ -11,7 +11,7 @@ export const FishingLogList = ({ logs, onDelete, onUpdate }: FishingLogListProps
 
     return (
         <div>
-            <h3>あなたの釣果一覧</h3>
+            <h3>みんなの釣果一覧</h3>
             {logs.length > 0 ? (
                 <ul>
                     {logs.map(log => (

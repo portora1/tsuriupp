@@ -45,3 +45,26 @@
   }
 }
 
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column; //frexを縦
+    align-items: flex-start; //左揃え
+    margin-bottom: 20px;
+
+    label {
+      width: auto; //幅は固定しない
+      margin-right: 0;
+      margin-bottom: 5px; //隙間を開ける
+      text-align: left;
+    }
+
+    input,
+    textarea {
+      width: 100%; //横幅いっぱい
+    }
+  }
+
+  .edit-form .edit-form-actions {
+    justify-content: center; //中央揃え
+  }
+}

@@ -21,7 +21,6 @@ export const useFishingLogs = (user: User | null) => {
                 const { data,error: fetchError } = await supabase
                   .from('fishing_logs')
                   .select('*')
-                  .eq('user_id', user.id)
                   .order('created_at', { ascending: false });
                 if (fetchError) throw fetchError;
                 if (data) setLogs(data);
