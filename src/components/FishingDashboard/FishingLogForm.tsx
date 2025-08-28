@@ -38,7 +38,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
         <form onSubmit={handleSubmit} className="log-form">
             <h3>新しい釣果を記録</h3>
             <div className="form-row">
-                <label htmlFor="fishName">魚の名前</label>
+                <label htmlFor="fishName">魚の名前(必須)</label>
                 <input
                 id="fishName"
                 type="text" 
@@ -49,7 +49,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading}:FishingLogFormProps) 
                 />
             </div>
             <div className="form-row">
-                <label htmlFor="location">場所</label>
+                <label htmlFor="location">場所(必須)</label>
                 <input
                 id="location"
                 type="text"

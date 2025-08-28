@@ -2,13 +2,12 @@
 
 .form-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 15px;
   label {
-    width: 100px;
+    flex-basis: 120px;
     margin-right: 10px;
     text-align: right;
-    flex-shrink: 0;
   }
   input,
   textarea {
@@ -18,6 +17,7 @@
     border: 1px solid variables.$border-color;
     background-color: variables.$surface-color;
     color: variables.$text-color;
+    min-width: 0;
   }
 }
 
@@ -56,6 +56,7 @@
       margin-right: 0;
       margin-bottom: 5px; //隙間を開ける
       text-align: left;
+      flex: none;
     }
 
     input,
