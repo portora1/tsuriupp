@@ -26,11 +26,16 @@ export const DashboardContainer = () => {
                 fish_weight: logData.fishWeight ? Number(logData.fishWeight) : null,
                 location: logData.location || null,
                 comment: logData.comment,
-                user_id: user.id,
+                profile_id: user.id,
                 fished_at: new Date().toISOString(),
                 image_url: imageUrl,
             })
-            .select()
+            .select(`
+                *,
+                profiles (
+                username
+                )
+                `)
             .single();
         if (insertError) throw insertError;
         addLog(data);

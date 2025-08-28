@@ -1,10 +1,17 @@
 import { useState, useEffect,} from "react";
 import { supabase } from "../lib/supabaseClient";
-import type {FishingLog} from "../App";
+import type { FishingLog } from "../App";
 import type { User } from "@supabase/supabase-js";
 
+//profilesの情報を含むようにする
+export type FishingLogWithProfile = FishingLog & {
+    profiles: {
+        username: string;
+    } | null;
+};
+
 export const useFishingLogs = (user: User | null) => {
-    const [logs, setLogs] = useState<FishingLog[]>([]);
+    const [logs, setLogs] = useState<FishingLogWithProfile[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +27,12 @@ export const useFishingLogs = (user: User | null) => {
             try {
                 const { data,error: fetchError } = await supabase
                   .from('fishing_logs')
-                  .select('*')
+                  .select(`
+                    *,
+                    profiles (
+                        username 
+                    )
+                    `)
                   .order('created_at', { ascending: false });
                 if (fetchError) throw fetchError;
                 if (data) setLogs(data);
@@ -32,19 +44,21 @@ export const useFishingLogs = (user: User | null) => {
         };
 
         fetchLogs();
-    }, [user?.id]);
+    }, [user]);
+    
+    const addLog = (newLog: FishingLogWithProfile) => {
+        setLogs(prevLogs => [newLog, ...prevLogs]);
+    };
 
     const removeLog = (logId: number) => {
-        setLogs(logs.filter(log => log.id !== logId));
+        setLogs(prevLogs => prevLogs.filter(log => log.id !== logId));
     };
 
-    const updateLog = (updateLog: FishingLog) => {
-        setLogs(logs.map(log => (log.id === updateLog.id ? updateLog : log)));
+    const updateLog = (updatedLog: FishingLogWithProfile) => {
+        setLogs(prevLogs => prevLogs.map(log => (log.id === updatedLog.id ? updatedLog : log)));
     };
-    
-    const addLog = (newLog: FishingLog) => {
-        setLogs([newLog, ...logs]);
-    };
+
 
     return { logs, loading, error, addLog, removeLog, updateLog};
 };
+
