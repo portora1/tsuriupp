@@ -1,12 +1,12 @@
 import { useState } from "react";
-import type { FishingLog } from "../../App";
+import type { FishingLogWithProfile } from "../../types";
 import { FishingLogEditForm } from "./FishingLogEditForm"
 import { useAuth  } from "../../contexts/AuthContext";
 
 type FishingLogItemProps = {
-    log: FishingLog;
-    onDelete: (log: FishingLog) => void;
-    onUpdate: (log: FishingLog, updateData: any) => void;
+    log: FishingLogWithProfile;
+    onDelete: (log: FishingLogWithProfile) => void;
+    onUpdate: (log: FishingLogWithProfile, updateData: any) => void;
 };
 
 export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) => {
@@ -18,7 +18,7 @@ export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) 
         setIsEditing(false);
     };
 
-    const isOwnPost = user && user.id === log.user_id;
+    const isOwnPost = user && user.id === log.profile_id;
 
     return (
         <li key={log.id}>
@@ -26,6 +26,9 @@ export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) 
                 <FishingLogEditForm log={log} onSave={handleSave} onCancel={() => setIsEditing(false)} />
             ) : (
                 <div>
+                    <div className="log-header">
+                        <span className="log-username">{log.profiles?.username || 'ナナシさん'}</span>
+                    </div>
                     {log.image_url && <img src={log.image_url} alt={log.fish_name} className="log-image" />}
                     <strong>{log.fish_name}</strong>
                     {log.location && <span> - {log.location}</span>}
@@ -35,10 +38,11 @@ export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) 
                     </div>
                     {log.comment && <p>{log.comment}</p>}
                     {isOwnPost && (
-                    <div>                    
+                    <div className="log-actions">                    
                         <button onClick= {() => setIsEditing(true)}>編集</button>
                         <button onClick= {() => {
-                            if (window.confirm('この釣果記録を本当に削除しますか？')) {
+                            if(window.confirm('この釣果記録を本当に削除しますか？')) {
+                                console.log(`[Item] onDelete CALLED with log ID: ${log.id}`);
                                 onDelete(log);
                             }
                         }}>削除</button>

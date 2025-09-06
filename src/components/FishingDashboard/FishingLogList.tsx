@@ -1,10 +1,10 @@
-import type { FishingLog } from "../../App"
+import type { FishingLogWithProfile } from "../../types";
 import { FishingLogItem } from "./FishingLogItem"
 
 type FishingLogListProps = {
-    logs: FishingLog[];
-    onDelete: (log: FishingLog) => void;
-    onUpdate: (log: FishingLog, updatedData: any) => void;
+    logs: FishingLogWithProfile[];
+    onDelete: (log: FishingLogWithProfile) => void;
+    onUpdate: (log: FishingLogWithProfile, updatedData: any) => void;
 };
 
 export const FishingLogList = ({ logs, onDelete, onUpdate }: FishingLogListProps) => {

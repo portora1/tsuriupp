@@ -1,22 +1,10 @@
-import { BrowserRouter, Routes, Route, Link, Outlet } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, Outlet, Navigate } from "react-router-dom";
 import { Auth } from "./components/Auth";
 import { useAuth } from "./contexts/AuthContext";
 import { supabase } from "./lib/supabaseClient";
-import { Dashboard } from "./components/FishingDashboard";
 import { Profile } from './components/Profile';
-
-export type FishingLog = {
-  id: number;
-  created_at: string;
-  fish_name: string;
-  fish_size: number | null;
-  fish_weight: number | null;
-  location: string | null;
-  fished_at: string;
-  comment: string | null;
-  image_url: string | null;
-  user_id: string;
-};
+import { DashboardContainer } from "./components/FishingDashboard/DashboardContainer";
+import type { ReactNode } from "react";
 
 const AppLayout = () => {
   const { user } = useAuth();
@@ -24,7 +12,7 @@ const AppLayout = () => {
     <div>
       <header className="app-header">
         <nav>
-          <Link to="/dashboard">ダッシュボード</Link> | <Link to ="/profile">プロフィール</Link>
+          <Link to="/dashboard">ダッシュボード</Link> | <Link to="/profile">プロフィール</Link>
         </nav>
         <div>
           <span>ようこそ、{user?.user_metadata.username || user?.email}さん！</span>
@@ -38,28 +26,37 @@ const AppLayout = () => {
   );
 }
 
+const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  const { session } = useAuth();
+  if (!session) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
+};
+
 function App() {
-  const { session, loading } = useAuth();
-  if(loading) {
-    return<div>読み込み中...</div>;
+  const { loading } = useAuth();
+  if (loading) {
+    return <div>読み込み中...</div>;
   }
 
   return (
     <BrowserRouter>
-      <div className='App'>
-        <Routes>
-        {!session ? (
-          <Route path="*" element={<Auth />} />
-        ) : (
-          <Route path="/" element={<AppLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="profile" element={<Profile />} />
-            <Route index element={<Dashboard />} />
-          </Route>
-        )}
-        </Routes>
-      </div>
-    </BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Auth />} />
+        <Route path="/*" element={
+          <ProtectedRoute>
+            <AppLayout />
+          </ProtectedRoute>
+        }
+        >
+          <Route path="dashboard" element={<DashboardContainer />} />
+          <Route path="profile" element={<Profile />} />
+          <Route index element={<Navigate to="/dashboard" replace />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+      </Routes>
+    </BrowserRouter >
   );
 }
 
