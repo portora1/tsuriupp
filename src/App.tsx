@@ -5,16 +5,23 @@ import { supabase } from "./lib/supabaseClient";
 import { Profile } from './components/Profile';
 import { DashboardContainer } from "./components/FishingDashboard/DashboardContainer";
 import type { ReactNode } from "react";
+import './styles/components/_app-layout.scss';
 
 const AppLayout = () => {
   const { user } = useAuth();
   return (
     <div>
       <header className="app-header">
-        <nav>
-          <Link to="/dashboard">ダッシュボード</Link> | <Link to="/profile">プロフィール</Link>
-        </nav>
-        <div>
+        <div className="header-left">
+          <img src="/images/app_logo.png" alt="釣りアップっぷ" className="app-logo" />
+          <nav>
+            <ul>
+              <li><Link to="/dashboard">ダッシュボード</Link></li>
+              <li><Link to="/profile">プロフィール</Link></li>
+            </ul>
+          </nav>
+        </div>
+        <div className="header-right">
           <span>ようこそ、{user?.user_metadata.username || user?.email}さん！</span>
           <button onClick={() => supabase.auth.signOut()}>ログアウト</button>
         </div>

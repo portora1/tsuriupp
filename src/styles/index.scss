@@ -1,18 +1,6 @@
 @use './variables';
-@use './button';
-@use './form';
-@use './app';
-
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  font-size: system-ui, sans-serif;
-  background-color: variables.$background-color;
-  color: variables.$text-color;
-}
-
-
+@use './base';
+@use './components/button';
+@use './components/form';
+@use './components/app-layout';
+@use './components/dashboard';
