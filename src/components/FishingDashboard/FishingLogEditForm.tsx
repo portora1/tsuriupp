@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { FishingLog } from "../../App";
+import type { FishingLog } from "../../types";
 
 type FishingLogEditFormProps = {
     log: FishingLog;
