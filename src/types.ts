@@ -16,3 +16,13 @@ export type FishingLogWithProfile = FishingLog & {
         username: string;
     } | null;
 };
+
+export type FishDexEntry = {
+  profile_id: string;
+  fish_name: string;
+  catch_count: number;
+  max_size: number | null;
+  max_weight: number | null;
+  id: number;
+  created_at: string;
+};
