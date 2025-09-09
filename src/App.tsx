@@ -3,8 +3,9 @@ import { Auth } from "./components/Auth";
 import { useAuth } from "./contexts/AuthContext";
 import { supabase } from "./lib/supabaseClient";
 import { Profile } from './components/Profile';
-import { DashboardContainer } from "./components/FishingDashboard/DashboardContainer";
+import { DashboardContainer as Dashboard } from "./components/FishingDashboard/DashboardContainer";
 import type { ReactNode } from "react";
+import { FishDex } from "./components/FishingDashboard";
 import './styles/components/_app-layout.scss';
 
 const AppLayout = () => {
@@ -18,6 +19,7 @@ const AppLayout = () => {
             <ul>
               <li><Link to="/dashboard">ダッシュボード</Link></li>
               <li><Link to="/profile">プロフィール</Link></li>
+              <li><Link to="/dex">魚図鑑</Link></li>
             </ul>
           </nav>
         </div>
@@ -57,7 +59,8 @@ function App() {
           </ProtectedRoute>
         }
         >
-          <Route path="dashboard" element={<DashboardContainer />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dex" element={<FishDex />} /> 
           <Route path="profile" element={<Profile />} />
           <Route index element={<Navigate to="/dashboard" replace />} />
         </Route>
