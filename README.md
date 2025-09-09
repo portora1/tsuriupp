@@ -19,8 +19,8 @@ React,TypeScript,Vite,docker,supabaseを使用して作成した釣果を保存�
 このAPPを動かすにはいくつくかの APIキーの設定が必要です。
 1. プロジェクトのクローンと依存関係のインストール
 ```bash
-git clone https://github/com/portora1/weather-app.git
-cd weather-app
+git clone 
+cd 
 yarn install
 or
 npm install
