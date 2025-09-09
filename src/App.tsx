@@ -60,7 +60,7 @@ function App() {
         }
         >
           <Route path="dashboard" element={<Dashboard />} />
-          <Route path="dex" element={<FishDex />} /> 
+          <Route path="dex" element={<FishDex />} />
           <Route path="profile" element={<Profile />} />
           <Route index element={<Navigate to="/dashboard" replace />} />
         </Route>

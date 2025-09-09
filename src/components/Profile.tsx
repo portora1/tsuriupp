@@ -4,53 +4,87 @@ import { useAuth } from "../contexts/AuthContext";
 
 export const Profile = () => {
     const { user } = useAuth();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-    const [username, setUsername] = useState(user?.user_metadata.username || '');
+    const [username, setUsername] = useState('');
 
     useEffect(() => {
-        if(user) {
-            setUsername(user.user_metadata.username || '');
+        if (user) {
+            const fetchProfile = async () => {
+                setLoading(true);
+                try {
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .select('username')
+                        .eq('id', user.id)
+                        .single();
+                    if (error && error.code !== 'PGRST116') { //PGRST116は行が見つからないというエラー
+                        throw error;
+                    }
+                    if (data) {
+                        setUsername(data.username || '');
+                    }
+                } catch (err: any) {
+                    console.error('Error fetching profile:', err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchProfile();
         }
     }, [user]);
+
     const handleProfileUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!user){
+        if (!user) {
             alert('ユーザー情報が見つかりません。');
             return;
         }
         try {
             setLoading(true);
-            const { error } = await supabase.auth.updateUser
-        ({data: {username: username },
-        });
+            const { error } = await supabase
+                .from('profiles')
+                .update({
+                    username: username,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('id', user.id);
+            if (error) throw error;
 
-        if(error) throw error;
-        alert('プロフィールを更新しました！');
+            await supabase.auth.updateUser({
+                data: { username: username }
+            });
+
+            alert('プロフィールを更新しました！');
         } catch (error: any) {
-        alert(error.message ||'更新に失敗しました');
+            alert(error.message || '更新に失敗しました');
         } finally {
             setLoading(false);
-        } 
+        }
     };
+
+    if (loading) {
+        return <div>読み込み中...</div>;
+    }
 
     return (
         <div>
             <h2>プロフィール編集</h2>
-            <form onSubmit={handleProfileUpdate}>
-                <div>
+            <form onSubmit={handleProfileUpdate} className="profile-form">
+                <div className="form-row">
+                    <label>メールアドレス</label>
+                    <span>{user?.email}</span>
+                </div>
+                <div className="form-row">
                     <label htmlFor="username">ユーザー名</label>
                     <input
-                    id="username"
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                        id="username"
+                        type="text"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>メールアドレス</label>
-                    <p>{user?.email}</p>
-                </div>
+
                 <button type="submit" disabled={loading}>
                     {loading ? '更新中...' : '更新する'}
                 </button>
