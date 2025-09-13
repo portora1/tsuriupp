@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext　} from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import type { ReactNode } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import type { Session, User } from '@supabase/supabase-js';
@@ -10,7 +10,6 @@ type AuthContextType = {
   loading: boolean;
 };
 
-// Contextを作成
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Contextを提供するためのプロバイダーコンポーネント
@@ -19,13 +18,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // const updateSession = useCallback((session: Session | null) => {
+  //   setSession(session);
+  //   setUser(session?.user ?? null);
+  // }, []);
+
+  // セッション情報の取得
   useEffect(() => {
-    // Supabaseの認証状態の変化を監視する
+    // getSesstionが成功したときにthenに入ってdetaという名前のオブジェクトを返してる
+    // dataの中にあるsessionの中身を直接抜き出している
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      console.log(session)
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+
+    // Supabaseの認証状態の変化を監視
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        setLoading(false);
       }
     );
 
@@ -41,7 +55,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     loading,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  // ローディング中は何も表示させず画面がちらつかないようにする
+  return <AuthContext.Provider value={value}>
+    {!loading && children}</AuthContext.Provider>;
 };
 
 // Contextを簡単に使うためのカスタムフック

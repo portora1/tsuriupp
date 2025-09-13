@@ -6,9 +6,6 @@ import { useStorage } from "../../hooks/useStorage";
 import { FishingLogForm } from "./FishingLogForm";
 import { FishingLogList } from "./FishingLogList";
 import type { FishingLog, FishingLogWithProfile } from "../../types";
-import '../../styles/components/_dashboard.scss';
-import '../../styles/components/_form.scss';
-
 
 export const DashboardContainer = () => {
     const { user } = useAuth();
@@ -92,7 +89,7 @@ export const DashboardContainer = () => {
                 console.error(`[Container] Supabase delete ERROR:`, error);
                 throw error;
             }
-
+            
             console.log(`[Container] Supabase delete SUCCESS`);
             removeLog(logToDelete.id);
         } catch (err) {
@@ -150,19 +147,17 @@ export const DashboardContainer = () => {
     if (error) return <div>エラー： {error}</div>
 
     return (
-        <div className="dashboard-container">
-            <div className="dashboard-form-area">
-                <FishingLogForm
-                    onLogSubmit={handleLogSubmit}
-                    isUploading={isUploading} />
-            </div>
-            <div className="dashboard-list-alea">
-                <FishingLogList
-                    logs={logs}
-                    onDelete={handleDelete}
-                    onUpdate={handleUpdate}
-                />
-            </div>
+        <div>
+            <h1>釣りアップっぷ</h1>
+            <FishingLogForm
+                onLogSubmit={handleLogSubmit}
+                isUploading={isUploading} />
+            < hr />
+            <FishingLogList
+                logs={logs}
+                onDelete={handleDelete}
+                onUpdate={handleUpdate}
+            />
         </div>
     );
 };

@@ -27,7 +27,9 @@ export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) 
             ) : (
                 <div>
                     <div className="log-header">
-                        <span className="log-username">{log.profiles?.username || 'ナナシさん'}</span>
+                        {log.profiles && (
+                        <span className="log-username">{log.profiles.username}</span>
+                        )}
                     </div>
                     {log.image_url && <img src={log.image_url} alt={log.fish_name} className="log-image" />}
                     <strong>{log.fish_name}</strong>
