@@ -9,11 +9,11 @@ export const useFishingLogs = (initialLogs: FishingLogWithProfile[] = []) => {
     };
 
     const removeLog = (logId: number) => {
-        console.log(`[HOOK] removeLog CALLED with log ID: ${logId}`);
+        // console.log(`[HOOK] removeLog CALLED with log ID: ${logId}`);
         setLogs(prevLogs => {
             const newLogs = prevLogs.filter(log => log.id !== logId);
-            console.log(`[HOOK] prevLogs count:`, prevLogs.length);
-            console.log(`[HOOK] newLogs count`, newLogs.length);
+            // console.log(`[HOOK] prevLogs count:`, prevLogs.length);
+            // console.log(`[HOOK] newLogs count`, newLogs.length);
             return newLogs;
         });
     };

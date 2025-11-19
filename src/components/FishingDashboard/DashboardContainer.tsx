@@ -21,14 +21,14 @@ export const DashboardContainer = () => {
         }
 
         const fetchLogs = async () => {
-            console.log('%c --- fetchLogs CALLED! --- ', 'color: red; font-weight: bold;');
+            // console.log('%c --- fetchLogs CALLED! --- ', 'color: red; font-weight: bold;');
             setLoading(true);
             setError(null);
             try {
                 const { data, error: fetchError } = await supabase
                     .from('fishing_logs')
                     .select(`*,profiles(username)`)
-                    .order('created_at', { ascending: false });
+                    .order('created_at', { ascending: false }); 
                 if (fetchError) throw fetchError;
                 if (data) setLogs(data as FishingLogWithProfile[]);
 
@@ -73,13 +73,13 @@ export const DashboardContainer = () => {
     };
 
     const handleDelete = async (logToDelete: FishingLog) => {
-        console.log(`[Container] Deleting image...`);
+        // console.log(`[Container] Deleting image...`);
         try {
             if (logToDelete.image_url) {
                 console.log(`[Container] Deleting image...`);
                 await deleteImage(logToDelete.image_url);
             }
-            console.log(`[Container] Deleting from Supabase...`);
+            // console.log(`[Container] Deleting from Supabase...`);
             const { error } = await supabase
                 .from('fishing_logs')
                 .delete()
@@ -90,7 +90,7 @@ export const DashboardContainer = () => {
                 throw error;
             }
             
-            console.log(`[Container] Supabase delete SUCCESS`);
+            // console.log(`[Container] Supabase delete SUCCESS`);
             removeLog(logToDelete.id);
         } catch (err) {
             alert('削除に失敗しました。');

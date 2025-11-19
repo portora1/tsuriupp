@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // dataの中にあるsessionの中身を直接抜き出している
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      console.log(session)
+      // console.log(session)
       setUser(session?.user ?? null);
       setLoading(false);
     });

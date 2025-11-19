@@ -44,7 +44,7 @@ export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) 
                         <button onClick= {() => setIsEditing(true)}>編集</button>
                         <button onClick= {() => {
                             if(window.confirm('この釣果記録を本当に削除しますか？')) {
-                                console.log(`[Item] onDelete CALLED with log ID: ${log.id}`);
+                                // console.log(`[Item] onDelete CALLED with log ID: ${log.id}`);
                                 onDelete(log);
                             }
                         }}>削除</button>
