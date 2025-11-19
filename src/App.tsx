@@ -24,7 +24,7 @@ const AppLayout = () => {
           </nav>
         </div>
         <div className="header-right">
-          <span>ようこそ、{user?.user_metadata.username || user?.email}さん！</span>
+          <span>ようこそ、{user?.user_metadata.username || "ゲスト"}さん！</span>
           <button onClick={() => supabase.auth.signOut()}>ログアウト</button>
         </div>
       </header>
