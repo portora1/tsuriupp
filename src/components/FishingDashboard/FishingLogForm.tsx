@@ -11,7 +11,6 @@ type FishingLogFormProps = {
             imageFile: File | null
         }) => void;
     isUploading: boolean;
-
 };
 
 export const FishingLogForm = ({ onLogSubmit, isUploading }: FishingLogFormProps) => {

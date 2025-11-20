@@ -89,8 +89,8 @@ export const DashboardContainer = () => {
                 console.error(`[Container] Supabase delete ERROR:`, error);
                 throw error;
             }
-            
             // console.log(`[Container] Supabase delete SUCCESS`);
+
             removeLog(logToDelete.id);
         } catch (err) {
             alert('削除に失敗しました。');
