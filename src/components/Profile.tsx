@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient"
 import { useAuth } from "../contexts/AuthContext";
+import { handleSupabaseError } from "../lib/errorHandlers";
 
 export const Profile = () => {
     const { user } = useAuth();
@@ -24,8 +25,11 @@ export const Profile = () => {
                     if (data) {
                         setUsername(data.username || '');
                     }
-                } catch (err: any) {
-                    console.error('Error fetching profile:', err.message);
+                } catch (err: unknown) {
+                    const message = handleSupabaseError(err)
+                    console.error("Error fetching profile:",message);
+                    
+                    // console.error('Error fetching profile:', err.message);
                 } finally {
                     setLoading(false);
                 }
@@ -56,8 +60,9 @@ export const Profile = () => {
             });
 
             alert('プロフィールを更新しました！');
-        } catch (error: any) {
-            alert(error.message || '更新に失敗しました');
+        } catch (error: unknown) {
+            const message = handleSupabaseError(error)
+            alert(message || '更新に失敗しました');
         } finally {
             setLoading(false);
         }
