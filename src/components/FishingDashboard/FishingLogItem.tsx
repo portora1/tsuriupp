@@ -1,19 +1,19 @@
 import { useState } from "react";
-import type { FishingLogWithProfile } from "../../types";
+import type { FishingLogFormData, FishingLogWithProfile } from "../../types";
 import { FishingLogEditForm } from "./FishingLogEditForm"
 import { useAuth  } from "../../contexts/AuthContext";
 
 type FishingLogItemProps = {
     log: FishingLogWithProfile;
     onDelete: (log: FishingLogWithProfile) => void;
-    onUpdate: (log: FishingLogWithProfile, updateData: any) => void;
+    onUpdate: (log: FishingLogWithProfile, updateData: FishingLogFormData) => void;
 };
 
 export const FishingLogItem = ({ log, onDelete, onUpdate }:FishingLogItemProps) => {
     const [isEditing, setIsEditing] = useState(false);
     const { user } = useAuth();
 
-    const handleSave = (updatedData: any) => {
+    const handleSave = (updatedData: FishingLogFormData) => {
         onUpdate(log, updatedData);
         setIsEditing(false);
     };

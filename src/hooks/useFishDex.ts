@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 import type { User } from "@supabase/supabase-js"
 import type { FishDexEntry } from "../types";
+import { handleSupabaseError } from "../lib/errorHandlers";
 
 export const useFishDex = (user: User | null) => {
     const [dexEntries, setDexEntries] = useState<FishDexEntry[]>([]);
@@ -26,8 +27,9 @@ export const useFishDex = (user: User | null) => {
 
                 if (fetchError) throw fetchError;
                 if (data) setDexEntries(data);
-            } catch (err: any) {
-                setError(err.message || '図鑑データの取得に失敗しました');
+            } catch (err: unknown) {
+                const message = handleSupabaseError(err)
+                setError(message || '図鑑データの取得に失敗しました');
             } finally {
                 setLoading(false);
             }

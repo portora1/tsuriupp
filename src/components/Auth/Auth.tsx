@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { useNavigate } from "react-router-dom";
+import { handleSupabaseError } from "../../lib/errorHandlers";
 
 export const Auth = () => {
   const [loading, setLoading] = useState(false);
@@ -43,8 +44,9 @@ export const Auth = () => {
         if (error) throw error;
         alert("確認メールを送信しました！メールボックスを確認してください。");
       }
-    } catch (error: any) {
-      alert(error.message || "処理に失敗しました。");
+    } catch (error: unknown) {
+      const message = handleSupabaseError(error)
+      alert(message || "処理に失敗しました。");
     } finally {
       setLoading(false);
     }

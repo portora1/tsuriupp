@@ -5,7 +5,8 @@ import { useFishingLogs } from "../../hooks/useFishingLogs";
 import { useStorage } from "../../hooks/useStorage";
 import { FishingLogForm } from "./FishingLogForm";
 import { FishingLogList } from "./FishingLogList";
-import type { FishingLog, FishingLogWithProfile } from "../../types";
+import type { FishingLog, FishingLogFormData,FishingLogWithProfile } from "../../types";
+import { handleSupabaseError } from "../../lib/errorHandlers";
 
 export const DashboardContainer = () => {
     const { user } = useAuth();
@@ -32,17 +33,18 @@ export const DashboardContainer = () => {
                 if (fetchError) throw fetchError;
                 if (data) setLogs(data as FishingLogWithProfile[]);
 
-            } catch (err: any) {
-                setError(err.message || 'データの取得に失敗しました');
+            } catch (err: unknown) {
+                const message = handleSupabaseError(err)
+                setError(message || 'データの取得に失敗しました');
             } finally {
                 setLoading(false);
             }
         };
 
         fetchLogs();
-    }, [user]);
+    }, [user,setLogs]);
 
-    const handleLogSubmit = async (logData: any) => {
+    const handleLogSubmit = async (logData: FishingLogFormData) => {
         if (!user) return;
         try {
             const imageUrlPromise = logData.imageFile ? uploadImage(logData.imageFile)
@@ -67,8 +69,9 @@ export const DashboardContainer = () => {
             if (insertError) throw insertError;
             if (data) addLog(data);
 
-        } catch (err: any) {
-            alert(err.message || '投稿に失敗しました。');
+        } catch (err: unknown) {
+            const message = handleSupabaseError(err)
+            alert(message || '投稿に失敗しました。');
         }
     };
 
@@ -92,12 +95,13 @@ export const DashboardContainer = () => {
             // console.log(`[Container] Supabase delete SUCCESS`);
 
             removeLog(logToDelete.id);
-        } catch (err) {
-            alert('削除に失敗しました。');
+        } catch (err:unknown) {
+            const message = handleSupabaseError(err);
+            alert(message ||'削除に失敗しました。');
         }
     };
 
-    const handleUpdate = async (logToUpdate: FishingLog, updatedData: any) => {
+    const handleUpdate = async (logToUpdate: FishingLog, updatedData:FishingLogFormData) => {
         //画像が変更されたかチェック
         const isImageChanged = !!updatedData.imageFile;
         //テキストが変更されたかチェック
@@ -114,7 +118,10 @@ export const DashboardContainer = () => {
         try {
             const updatedImageUrlPromise = updatedData.imageFile ? (async () => {
                 if (logToUpdate.image_url) await deleteImage(logToUpdate.image_url);
-                return uploadImage(updatedData.imageFile);
+                if (updatedData.imageFile) {
+                    return uploadImage(updatedData.imageFile);
+                }
+                return null
             })()
                 : Promise.resolve(logToUpdate.image_url);
 
@@ -137,8 +144,9 @@ export const DashboardContainer = () => {
             if (error) throw error;
             if (data) updateLog(data);
 
-        } catch (err) {
-            alert('更新に失敗しました。');
+        } catch (err:unknown) {
+            const message = handleSupabaseError(err);
+            alert(message||'更新に失敗しました。');
         }
     };
 

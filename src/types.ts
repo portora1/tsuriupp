@@ -11,10 +11,23 @@ export type FishingLog = {
   profile_id: string;
 };
 
+export type FishingLogUpdatePayload = Partial<
+  Omit<FishingLog, "id" | "create_at" | "profile_id">
+>;
+
+export type FishingLogFormData = {
+  fishName: string;
+  location: string|null;
+  fishSize: string;
+  fishWeight: string;
+  comment: string|null;
+  imageFile: File | null;
+};
+
 export type FishingLogWithProfile = FishingLog & {
-    profiles: {
-        username: string;
-    } | null;
+  profiles: {
+    username: string;
+  } | null;
 };
 
 export type FishDexEntry = {

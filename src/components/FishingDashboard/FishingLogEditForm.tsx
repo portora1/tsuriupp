@@ -1,16 +1,9 @@
 import { useState } from "react";
-import type { FishingLog } from "../../types";
+import type { FishingLog, FishingLogFormData } from "../../types";
 
 type FishingLogEditFormProps = {
     log: FishingLog;
-    onSave: (updateData: {
-        fishName: string;
-        location: string | null;
-        fishSize: string;
-        fishWeight: string;
-        comment: string | null;
-        imageFile: File | null; 
-    }) => void;
+    onSave: (updateData: FishingLogFormData) => void;
     onCancel: () => void;
 };
 
