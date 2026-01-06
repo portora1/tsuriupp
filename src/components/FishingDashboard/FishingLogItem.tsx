@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { FishingLogFormData, FishingLogWithProfile } from "../../types";
 import { FishingLogEditForm } from "./FishingLogEditForm"
-import { useAuth  } from "../../contexts/AuthContext";
+import { useAuth } from "../../hooks/useAuth";
 
 type FishingLogItemProps = {
     log: FishingLogWithProfile;

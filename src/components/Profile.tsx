@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient"
-import { useAuth } from "../contexts/AuthContext";
 import { handleSupabaseError } from "../lib/errorHandlers";
+import { useAuth } from "../hooks/useAuth";
 
 export const Profile = () => {
     const { user } = useAuth();

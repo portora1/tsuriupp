@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route, Link, Outlet, Navigate } from "react-router-dom";
 import { Auth } from "./components/Auth";
-import { useAuth } from "./contexts/AuthContext";
 import { supabase } from "./lib/supabaseClient";
 import { Profile } from './components/Profile';
 import { DashboardContainer as Dashboard } from "./components/FishingDashboard/DashboardContainer";
 import type { ReactNode } from "react";
 import { FishDex } from "./components/FishingDashboard";
 import './styles/components/_app-layout.scss';
+import { useAuth } from "./hooks/useAuth";
 
 const AppLayout = () => {
   const { user } = useAuth();

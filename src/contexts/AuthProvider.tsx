@@ -1,16 +1,7 @@
-import { createContext, useState, useEffect, useContext } from 'react';
-import type { ReactNode } from 'react';
-import { supabase } from '../lib/supabaseClient';
-import type { Session, User } from '@supabase/supabase-js';
-
-// Contextが持つデータの型を定義
-type AuthContextType = {
-  session: Session | null;
-  user: User | null;
-  loading: boolean;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+import {useEffect, useState, type ReactNode } from "react";
+import { supabase } from "../lib/supabaseClient";
+import type { Session, User } from "@supabase/supabase-js";
+import { AuthContext } from "./AuthContext";
 
 // Contextを提供するためのプロバイダーコンポーネント
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -34,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     });
 
-
     // Supabaseの認証状態の変化を監視
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
@@ -56,15 +46,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // ローディング中は何も表示させず画面がちらつかないようにする
-  return <AuthContext.Provider value={value}>
-    {!loading && children}</AuthContext.Provider>;
-};
-
-// Contextを簡単に使うためのカスタムフック
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };

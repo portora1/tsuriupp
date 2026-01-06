@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../../lib/supabaseClient";
-import { useAuth } from "../../contexts/AuthContext";
 import { useFishingLogs } from "../../hooks/useFishingLogs";
 import { useStorage } from "../../hooks/useStorage";
+import { useAuth } from "../../hooks/useAuth";
 import { FishingLogForm } from "./FishingLogForm";
 import { FishingLogList } from "./FishingLogList";
 import type { FishingLog, FishingLogFormData,FishingLogWithProfile } from "../../types";

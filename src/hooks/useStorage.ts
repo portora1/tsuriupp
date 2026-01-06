@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../contexts/AuthContext";
 import { handleSupabaseError } from "../lib/errorHandlers";
+import { useAuth } from "./useAuth";
 
 export const useStorage = (bucketName: string) => {
   const { user } = useAuth();
