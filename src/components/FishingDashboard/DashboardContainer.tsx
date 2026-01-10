@@ -5,7 +5,7 @@ import { useStorage } from "../../hooks/useStorage";
 import { useAuth } from "../../hooks/useAuth";
 import { FishingLogForm } from "./FishingLogForm";
 import { FishingLogList } from "./FishingLogList";
-import type { FishingLog, FishingLogFormData,FishingLogWithProfile } from "../../types";
+import type { FishingLog, FishingLogFormData, FishingLogWithProfile } from "../../types";
 import { handleSupabaseError } from "../../lib/errorHandlers";
 
 export const DashboardContainer = () => {
@@ -29,7 +29,7 @@ export const DashboardContainer = () => {
                 const { data, error: fetchError } = await supabase
                     .from('fishing_logs')
                     .select(`*,profiles(username)`)
-                    .order('created_at', { ascending: false }); 
+                    .order('created_at', { ascending: false });
                 if (fetchError) throw fetchError;
                 if (data) setLogs(data as FishingLogWithProfile[]);
 
@@ -42,7 +42,7 @@ export const DashboardContainer = () => {
         };
 
         fetchLogs();
-    }, [user,setLogs]);
+    }, [user, setLogs]);
 
     const handleLogSubmit = async (logData: FishingLogFormData) => {
         if (!user) return;
@@ -95,13 +95,13 @@ export const DashboardContainer = () => {
             // console.log(`[Container] Supabase delete SUCCESS`);
 
             removeLog(logToDelete.id);
-        } catch (err:unknown) {
+        } catch (err: unknown) {
             const message = handleSupabaseError(err);
-            alert(message ||'削除に失敗しました。');
+            alert(message || '削除に失敗しました。');
         }
     };
 
-    const handleUpdate = async (logToUpdate: FishingLog, updatedData:FishingLogFormData) => {
+    const handleUpdate = async (logToUpdate: FishingLog, updatedData: FishingLogFormData) => {
         //画像が変更されたかチェック
         const isImageChanged = !!updatedData.imageFile;
         //テキストが変更されたかチェック
@@ -144,9 +144,9 @@ export const DashboardContainer = () => {
             if (error) throw error;
             if (data) updateLog(data);
 
-        } catch (err:unknown) {
+        } catch (err: unknown) {
             const message = handleSupabaseError(err);
-            alert(message||'更新に失敗しました。');
+            alert(message || '更新に失敗しました。');
         }
     };
 
@@ -156,7 +156,7 @@ export const DashboardContainer = () => {
 
     return (
         <div>
-            <h1>釣りアップっぷ</h1>
+            {/* <h1>釣りアップっぷ</h1> */}
             <FishingLogForm
                 onLogSubmit={handleLogSubmit}
                 isUploading={isUploading} />
