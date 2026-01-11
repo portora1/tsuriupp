@@ -41,17 +41,17 @@ export const FishingLogForm = ({ onLogSubmit, isUploading }: FishingLogFormProps
             <h3>新しい釣果を記録</h3>
             <div className="form-row">
                 <label htmlFor="fishName">魚の名前(必須)</label>
-                    <input
-                        id="fishName"
-                        type="text"
-                        value={fishName}
-                        onChange={e => setFishName(e.target.value)}
-                        placeholder="例:マダイ"
-                        required
-                        title="カタカナで入力してください"
-                    />
+                <input
+                    id="fishName"
+                    type="text"
+                    value={fishName}
+                    onChange={e => setFishName(e.target.value)}
+                    placeholder="例:マダイ"
+                    required
+                    title="カタカナで入力してください"
+                />
             </div>
-            
+
 
             <div className="form-row">
                 <label htmlFor="location">場所(必須)</label>
@@ -74,13 +74,13 @@ export const FishingLogForm = ({ onLogSubmit, isUploading }: FishingLogFormProps
                 />
             </div>
             <div className="form-row">
-                <label htmlFor="fishWeight">重さ (kg)</label>
+                <label htmlFor="fishWeight">重さ (g)</label>
                 <input
                     id="fishWeight"
                     type="number"
                     value={fishWeight}
                     onChange={e => setFishWeitht(e.target.value)}
-                    placeholder="3"
+                    placeholder="300"
                 />
             </div>
             <div className="form-row">

@@ -47,7 +47,7 @@ export const FishingLogItem = ({ log, onDelete, onUpdate }: FishingLogItemProps)
                             </div>
                             <div className="spec-info">
                                 {log.fish_size && <span>サイズ: ({log.fish_size} cm)</span>}
-                                {log.fish_weight && <span>/ 重さ: {log.fish_weight} kg</span>}
+                                {log.fish_weight && <span>/ 重さ: {log.fish_weight} g</span>}
                             </div>
                             {log.comment && <p className="content-text">{log.comment}</p>}
                             {/* 自分の投稿だけ編集と削除 */}
