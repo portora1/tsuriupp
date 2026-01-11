@@ -13,18 +13,18 @@ export const FishingLogList = ({ logs, onDelete, onUpdate }: FishingLogListProps
         <div>
             <h3>みんなの釣果一覧</h3>
             {logs.length > 0 ? (
-                <ul>
+                <ul className="post-grid">
                     {logs.map(log => (
                         <FishingLogItem
-                        key={log.id}
-                        log={log}
-                        onDelete={onDelete}
-                        onUpdate={onUpdate}
+                            key={log.id}
+                            log={log}
+                            onDelete={onDelete}
+                            onUpdate={onUpdate}
                         />
                     ))}
                 </ul>
             ) : (
-            <p>まだ投稿がありません</p>
+                <p>まだ投稿がありません</p>
             )}
         </div>
     );
