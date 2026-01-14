@@ -82,6 +82,13 @@
       margin-bottom: 5px;
     }
   }
+
+  .log-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 15px 15px;
+    justify-content: flex-start;
+  }
 }
 
 .modal-overlay {
