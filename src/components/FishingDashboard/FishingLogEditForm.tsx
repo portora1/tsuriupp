@@ -29,6 +29,7 @@ export const FishingLogEditForm = ({ log, onSave, onCancel }: FishingLogEditForm
                     value={fishName}
                     onChange={e => setFishName(e.target.value)}
                     placeholder="マダイ"
+                    required
                 />
             </div>
             <div className="form-row">
@@ -37,6 +38,7 @@ export const FishingLogEditForm = ({ log, onSave, onCancel }: FishingLogEditForm
                     value={location || ''}
                     onChange={e => setLocation(e.target.value)}
                     placeholder="例：〇〇漁港"
+                    required
                 />
             </div>
             <div className="form-row">
@@ -73,6 +75,7 @@ export const FishingLogEditForm = ({ log, onSave, onCancel }: FishingLogEditForm
                             setImageFile(e.target.files[0])
                         }
                     }}
+                    required
                 />
             </div>
             <div className="edit-form-actions">

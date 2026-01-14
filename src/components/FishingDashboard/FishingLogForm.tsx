@@ -61,6 +61,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading }: FishingLogFormProps
                     value={location}
                     onChange={e => setLocation(e.target.value)}
                     placeholder="例:糸島漁港"
+                    required
                 />
             </div>
             <div className="form-row">
@@ -92,7 +93,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading }: FishingLogFormProps
                     placeholder="例:自己ベスト更新！"></textarea>
             </div>
             <div className="form-row">
-                <label htmlFor="image-upload">写真</label>
+                <label htmlFor="image-upload">写真(必須)</label>
                 <input
                     id="image-upload"
                     type="file"
@@ -102,6 +103,7 @@ export const FishingLogForm = ({ onLogSubmit, isUploading }: FishingLogFormProps
                             setImageFile(e.target.files[0]);
                         }
                     }}
+                    required
                 />
             </div>
             <button type="submit" disabled={isUploading}>{isUploading ? '投稿中...' : '投稿する'}</button>
