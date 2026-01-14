@@ -17,10 +17,10 @@ export type FishingLogUpdatePayload = Partial<
 
 export type FishingLogFormData = {
   fishName: string;
-  location: string|null;
+  location: string | null;
   fishSize: string;
   fishWeight: string;
-  comment: string|null;
+  comment: string | null;
   imageFile: File | null;
 };
 
@@ -33,9 +33,10 @@ export type FishingLogWithProfile = FishingLog & {
 export type FishDexEntry = {
   profile_id: string;
   fish_name: string;
-  catch_count: number;
+  total_count: number;
   max_size: number | null;
   max_weight: number | null;
   id: number;
   created_at: string;
+  top_angler: string | null;
 };

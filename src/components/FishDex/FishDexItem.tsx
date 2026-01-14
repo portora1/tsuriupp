@@ -1,18 +1,23 @@
 import type { FishDexEntry } from "../../types";
 
 type Props = {
-    entry:FishDexEntry;
+    entry: FishDexEntry;
 };
 
 export const FishDexItem = ({ entry }: Props) => {
     return (
         <li className="fish-dex-item">
-            <h3>{entry.fish_name}</h3>
+            <h3 className="fish-name">{entry.fish_name}</h3>
             <div className="dex-details">
-                <span>最大サイズ: {entry.max_size || '記録なし'}cm</span>
-                <span>最大重量: {entry.max_weight || '記録なし'}kg</span>
-                <span>捕獲数: {entry.catch_count}</span>
+                <div className="dex-row">
+                    <span>記録された最大サイズ: {entry.max_size ? `${entry.max_size}cm` : "記録なし"}</span>
+                    {entry.top_angler && (
+                        < span className="top-angler">(👑{entry.top_angler}さん) </span>
+                    )}
+                </div>
+                <span>記録された最大重量: {entry.max_weight ? `${entry.max_weight}g` : '記録なし'} </span>
+                <span>ユーザー累計捕獲数: {entry.total_count}匹</span>
             </div>
-        </li>
+        </li >
     );
 };
