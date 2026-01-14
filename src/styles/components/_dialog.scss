@@ -1,0 +1,66 @@
+@use "../variables" as *;
+
+.dialog-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.8); // 背景を暗くする
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  backdrop-filter: blur(6px);
+}
+
+.dialog-content {
+  background: $surface-color;
+  padding: 24px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+  color: $text-color;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  border: 1px solid $border-color;
+
+  .dialog-title {
+    margin-bottom: 24px;
+    font-size: 1.2rem;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .dialog-body {
+    margin-bottom: 24px;
+    text-align: center;
+    line-height: 1.6;
+    color: $text-color;
+  }
+
+  .dialog-close-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    background: $primary-color;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    
+    &:hover {
+      filter: brightness(1.2);
+    }
+
+  }
+}
+
+.log-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 20px;
+}

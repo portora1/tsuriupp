@@ -1,4 +1,4 @@
-@use '../variables';
+@use '../variables' as *;
 
 // pc用のスタイル
 
@@ -7,7 +7,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem;
-    border-bottom: 1px solid variables.$border-color;
+    border-bottom: 1px solid $border-color;
 }
 
 .app-logo {
