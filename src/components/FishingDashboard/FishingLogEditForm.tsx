@@ -75,7 +75,6 @@ export const FishingLogEditForm = ({ log, onSave, onCancel }: FishingLogEditForm
                             setImageFile(e.target.files[0])
                         }
                     }}
-                    required
                 />
             </div>
             <div className="edit-form-actions">
