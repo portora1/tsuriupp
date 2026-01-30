@@ -1,13 +1,14 @@
-@use '../variables' as *;
+@use "../variables" as *;
 
 button {
   padding: 8px 15px;
   border: none;
   cursor: pointer;
-  background-color: $primary-color;
-  color: white;
+  // background-color: $primary-color;
+  background-color: white;
+  // color: white;
+  color: $primary-color;
   &:hover {
     opacity: 0.8;
   }
 }
-

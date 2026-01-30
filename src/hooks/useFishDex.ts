@@ -1,46 +1,44 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
-import type { User } from "@supabase/supabase-js"
+import type { User } from "@supabase/supabase-js";
 import type { FishDexEntry } from "../types";
 import { handleSupabaseError } from "../lib/errorHandlers";
 
 export const useFishDex = (user: User | null) => {
-    const [dexEntries, setDexEntries] = useState<FishDexEntry[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const [dexEntries, setDexEntries] = useState<FishDexEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!user) {
-            setLoading(false);
-            return;
-        }
+  useEffect(() => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
-        const fetchDex = async () => {
-            setLoading(true);
-            setError(null);
-            try {
+    const fetchDex = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const { data, error: fetchError } = await supabase
+          .from("fish_summary")
+          .select("*");
 
-                
-                 const { data, error: fetchError } = await supabase
-                    .from('fish_summary')
-                    .select('*')
-
-                if (fetchError) throw fetchError;
-                if (data) setDexEntries(data);
-            } catch (err: unknown) {
-                const message = handleSupabaseError(err)
-                setError(message || '図鑑データの取得に失敗しました');
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchDex();
-    }, [user]);
-
-    const refetchDex = async () => {
-        if (!user) return;
+        if (fetchError) throw fetchError;
+        if (data) setDexEntries(data);
+      } catch (err: unknown) {
+        const message = handleSupabaseError(err);
+        setError(message || "図鑑データの取得に失敗しました");
+      } finally {
+        setLoading(false);
+      }
     };
 
-    return { dexEntries, loading, error, refetchDex };
+    fetchDex();
+  }, [user]);
+
+  const refetchDex = async () => {
+    if (!user) return;
+  };
+
+  return { dexEntries, loading, error, refetchDex };
 };

@@ -1,14 +1,23 @@
+@use "../../../styles/variables" as *;
+
+.container {
+  position: relative;
+  display: inline-block;
+}
+
 .popover {
   position: absolute;
-  bottom: 120%; // ボタンの少し上
-  left: 0;
   display: flex;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  background: white;
   gap: 8px;
   background: white;
   padding: 8px 12px;
   border-radius: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-  z-index: 100;
 }
 
 .reactionItem {
@@ -16,9 +25,38 @@
   border: none;
   font-size: 24px;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
+  -webkit-touch-callout: none;
+  touch-action: manipulation;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease;
+  &:hover {
+    transform: scale(1.2);
+  }
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 998;
+  background: transparent;
+}
+
+.mainButton {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  &.hasSelect {
+    background-color: #bababa;
+    color: black;
+  }
 }

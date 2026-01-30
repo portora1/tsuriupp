@@ -1,0 +1,15 @@
+{
+  "short_name": "つりあっぷっぷ",
+  "name": "つりあっぷっぷ - 釣り人専用SNS",
+  "icons": [
+    {
+      "src": "/images/apple-touch-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#007bff",
+  "background_color": "#ffffff"
+}

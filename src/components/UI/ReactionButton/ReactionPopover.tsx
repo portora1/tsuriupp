@@ -4,10 +4,10 @@ import styles from "./ReactionButton.module.scss";
 
 const reactions = [
   { emoji: "👍", label: "good" },
-  { emoji: "😳", label: "" },
-  { emoji: "☺️", label: "" },
-  { emoji: "👀", label: "" },
-  { emoji: "👏", label: "" },
+  { emoji: "👏", label: "clap" },
+  { emoji: "😳", label: "wow" },
+  { emoji: "☺️", label: "smile" },
+  { emoji: "👀", label: "eyes" },
 ];
 
 interface ReactionPopoverProps {
@@ -19,7 +19,7 @@ export const ReactionPopover = ({ onSelect }: ReactionPopoverProps) => {
     <motion.div
       className={styles.popover}
       initial={{ opacity: 0, y: 10, scale: 0.9 }}
-      animate={{ opacity: 0, y: 0, scale: 1 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: 10, scale: 0.9 }}
     >
       {reactions.map((res, index) => (

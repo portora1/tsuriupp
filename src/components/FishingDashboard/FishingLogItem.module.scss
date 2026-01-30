@@ -1,0 +1,112 @@
+@use "../../styles/variables" as *;
+
+.postCard {
+  list-style: none;
+  margin-bottom: 2rem;
+  background-color: $surface-color;
+  border: 1px solid $border-color;
+  border-radius: 12px;
+  overflow: visible;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 650px;
+  @media (min-width: 900px) {
+    max-width: 450px;
+    height: 650px;
+    margin: 0 auto;
+    // max-height: 90vh;
+  }
+  //   @media (max-width: 600px) {
+  //     max-width: 100%;
+  //   }
+}
+
+.usernameHeader {
+  padding: 10px 15px;
+  flex-shrink: 0;
+  .username {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: $text-color;
+  }
+}
+
+.imageWrapper {
+  width: 100%;
+  height: 300px;
+  flex-shrink: 0;
+  cursor: pointer;
+  background-color: #000;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+}
+
+.postContent {
+  padding: 15px;
+  overflow-y: auto;
+  height: 180px;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-slider-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+  }
+
+  .mainInfo {
+    margin-bottom: 5px;
+    .fishName {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: $text-color;
+    }
+    .locationTag {
+      color: rgba($text-color, 0.7);
+      font-size: 0.9rem;
+    }
+  }
+
+  .specInfo {
+    font-size: 0.85rem;
+    color: rgba($text-color, 0.8);
+  }
+
+  .contentText {
+    margin-top: 10px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+}
+
+.logActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  padding-bottom: 5px;
+  button {
+    background: none;
+    border: 1px solid $border-color;
+    color: $text-color;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+.reactionWrapper {
+  padding: 0 15px 15px;
+  flex-shrink: 0;
+}

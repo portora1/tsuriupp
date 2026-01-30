@@ -40,3 +40,9 @@ export type FishDexEntry = {
   created_at: string;
   top_angler: string | null;
 };
+
+export type ReactionData = {
+  emoji: string;
+  count: number;
+  me: boolean;
+};

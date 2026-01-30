@@ -1,0 +1,39 @@
+.reactionContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.badgeList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background: #f0f0f0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #e0e0e0;
+  }
+
+  &.myReaction {
+    background: #e7f3ff;
+    border-color: #007bff;
+  }
+
+  .count {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #555;
+  }
+}

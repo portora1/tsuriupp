@@ -1,46 +1,78 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { ReactionPopover } from "./ReactionPopover";
 import styles from "./ReactionButton.module.scss";
+// import type { ReactionData } from "../../../types";
 
-export const ReactionButton = () => {
+interface ReactionButtonProps {
+  selectEmoji: string;
+  onSelect: (emoji: string) => void;
+}
+
+export const ReactionButton = ({
+  selectEmoji,
+  onSelect,
+}: ReactionButtonProps) => {
   const [showPopover, setShowPopover] = useState(false);
-  const [selectedReaction, setSelectedReaction] = useState("👍");
   const timeRef = useRef<NodeJS.Timeout | null>(null);
 
+  //   const handlePressStart = (e:React.MouseEvent | React.TouchEvent) => {
   const handlePressStart = () => {
+    if (timeRef.current) clearTimeout(timeRef.current);
     timeRef.current = setTimeout(() => {
       setShowPopover(true);
-    }, 500);
+      console.log("ポップアップを表示");
+    }, 150);
+    console.log("タイマー開始");
   };
 
   const handlePressEnd = () => {
     if (timeRef.current) {
       clearTimeout(timeRef.current);
+      console.log("タイマー終了");
     }
   };
 
   const handleSelect = (emoji: string) => {
-    setSelectedReaction(emoji);
+    onSelect(emoji);
     setShowPopover(false);
   };
 
   return (
     <div className={styles.container}>
       <AnimatePresence>
-        {showPopover && <ReactionPopover onSelect={handleSelect} />}
+        {showPopover && (
+          <>
+            <motion.div
+              className={styles.overlay}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => {
+                setShowPopover(false);
+              }}
+            />
+            <ReactionPopover onSelect={handleSelect} />
+          </>
+        )}
       </AnimatePresence>
 
       <button
-        className={styles.mainButton}
+        type="button"
+        className={`${styles.mainButton} ${selectEmoji ? styles.hasSelect : ""}`}
         onMouseDown={handlePressStart}
         onMouseUp={handlePressEnd}
-        onMouseLeave={handlePressEnd}
+        // onMouseLeave={handlePressEnd}
         onTouchStart={handlePressStart}
         onTouchEnd={handlePressEnd}
+        onClick={() => {
+          if (!showPopover && selectEmoji === "") {
+            onSelect("👍");
+          }
+        }}
       >
-        <span>{selectedReaction}</span>
-        <span>いいね</span>
+        <span className={styles.emoji}>{selectEmoji || "👍"}</span>
+        <span className={styles.label}>いいね</span>
       </button>
     </div>
   );
