@@ -13,32 +13,33 @@ export const ReactionArea = ({
 }: ReactionAreaProps) => {
   const [reactions, setReactions] = useState<ReactionData[]>(initialReactions);
   const [mySelectEmoji, setMySelectEmoji] = useState("");
-
+  // myCurrent 自分が選んでいるリアクション
+  // カウントが0ならリストから消す処理
   const handleSelect = (emoji: string) => {
     setReactions((prev) => {
-      const myCurrentReactions = prev.find((r) => r.me);
-      if (myCurrentReactions && myCurrentReactions.emoji === emoji) {
-        const nextReactions = prev
+      const myCurrent = prev.find((r) => r.me);
+      if (myCurrent && myCurrent.emoji === emoji) {
+        setMySelectEmoji("");
+        return prev
           .map((r) =>
             r.emoji === emoji ? { ...r, count: r.count - 1, me: false } : r
           )
           .filter((r) => r.count > 0);
-        setMySelectEmoji("");
-        return nextReactions;
       }
-
-      let newReactions = prev
+      setMySelectEmoji(emoji);
+      const base = prev
         .map((r) => (r.me ? { ...r, count: r.count - 1, me: false } : r))
-        .filter((r) => r.emoji === emoji);
-      const existing = newReactions.find((r) => r.emoji === emoji);
+        .filter((r) => r.count > 0);
+      // 選んだ絵文字はリストにあるか？
+      const existing = base.some((r) => r.emoji === emoji);
       if (existing) {
-        return prev.map((r) =>
+        return base.map((r) =>
           r.emoji === emoji ? { ...r, count: r.count + 1, me: true } : r
         );
       }
-      return [...newReactions, { emoji, count: 1, me: true }];
+      //   無かったら増やす
+      return [...base, { emoji, count: 1, me: true }];
     });
-    setMySelectEmoji(emoji);
     // DB連携予定
     console.log(`Target ${targetId}updated whih ${emoji}`);
   };
