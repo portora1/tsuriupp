@@ -9,12 +9,14 @@ type FishingLogListProps = {
     log: FishingLogWithProfile,
     updatedData: FishingLogFormData
   ) => void;
+  onRefresh: () => void;
 };
 
 export const FishingLogList = ({
   logs,
   onDelete,
   onUpdate,
+  onRefresh,
 }: FishingLogListProps) => {
   return (
     <div>
@@ -27,6 +29,7 @@ export const FishingLogList = ({
               log={log}
               onDelete={onDelete}
               onUpdate={onUpdate}
+              onRefresh={onRefresh}
             />
           ))}
         </ul>

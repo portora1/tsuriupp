@@ -1,13 +1,95 @@
-.edit-form {
-  display: flex;
-  gap: 10px;
+@use "../../styles/variables" as *;
 
-  input,
-  textarea {
-    padding: 8px;
-    border: 1px solid #533;
-    background-color: #333;
-    color: white;
-    border-radius: 4px;
+.authContainer {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: $surface-color;
+  border-radius: 12px;
+  border: 1px solid $border-color;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: $text-color;
+  }
+}
+
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .formRow {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-weight: bold;
+      font-size: 0.9rem;
+      color: $text-color;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid $border-color;
+      background-color: rgba(255, 255, 255, 0.05);
+      color: white;
+      box-sizing: border-box;
+      font-size: 1rem;
+
+      &:focus {
+        outline: none;
+        border-color: rgba($text-color, 0.5);
+      }
+    }
+  }
+
+  button {
+    padding: 12px;
+    background-color: $surface-color;
+    color: $text-color;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+
+    &:hover {
+      background-color: rgba($text-color, 0.1);
+    }
+  }
+}
+
+.switchText {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: $text-color;
+
+  button {
+    background: none;
+    border: none;
+    color: #4a90e2; // ここだけリンクっぽく色を変えてもOK
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0 5px;
+    margin: 0;
+    font-size: inherit;
+    font-weight: normal;
+  }
+}
+
+.authActions {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+
+  button {
+    width: 100%;
   }
 }

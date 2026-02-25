@@ -25,7 +25,11 @@ export const FishDexItem = ({ entry }: Props) => {
         </span>
         <span>ユーザー累計捕獲数: {entry.total_count}匹</span>
       </div>
-      <ReactionArea targetId={entry.id} />
+      <ReactionArea
+        targetId={entry.id}
+        tableName="fish_dex_reactions"
+        targetColumn="fish_id"
+      />
     </li>
   );
 };

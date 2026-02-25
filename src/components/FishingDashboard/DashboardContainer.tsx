@@ -20,33 +20,35 @@ export const DashboardContainer = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchLogs = async () => {
+    // console.log('%c --- fetchLogs CALLED! --- ', 'color: red; font-weight: bold;');
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error: fetchError } = await supabase
+        .from("fishing_logs")
+        .select(
+          `*,profiles(username),
+          fishing_log_reactions(emoji_id,user_id)
+          `
+        )
+        .order("created_at", { ascending: false });
+      if (fetchError) throw fetchError;
+      if (data) setLogs(data as FishingLogWithProfile[]);
+    } catch (err: unknown) {
+      const message = handleSupabaseError(err);
+      setError(message || "データの取得に失敗しました");
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     if (!user) {
       setLoading(false);
       return;
     }
-
-    const fetchLogs = async () => {
-      // console.log('%c --- fetchLogs CALLED! --- ', 'color: red; font-weight: bold;');
-      setLoading(true);
-      setError(null);
-      try {
-        const { data, error: fetchError } = await supabase
-          .from("fishing_logs")
-          .select(`*,profiles(username)`)
-          .order("created_at", { ascending: false });
-        if (fetchError) throw fetchError;
-        if (data) setLogs(data as FishingLogWithProfile[]);
-      } catch (err: unknown) {
-        const message = handleSupabaseError(err);
-        setError(message || "データの取得に失敗しました");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchLogs();
-  }, [user, setLogs]);
+  }, [user]);
 
   const handleLogSubmit = async (logData: FishingLogFormData) => {
     if (!user) return;
@@ -172,6 +174,7 @@ export const DashboardContainer = () => {
         logs={logs}
         onDelete={handleDelete}
         onUpdate={handleUpdate}
+        onRefresh={fetchLogs}
       />
     </div>
   );

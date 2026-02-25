@@ -2,6 +2,7 @@ import { useState } from "react";
 import { supabase } from "../../lib/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { handleSupabaseError } from "../../lib/errorHandlers";
+import style from "./Auth.module.scss";
 
 export const Auth = () => {
   const [loading, setLoading] = useState(false);
@@ -45,7 +46,7 @@ export const Auth = () => {
         alert("確認メールを送信しました！メールボックスを確認してください。");
       }
     } catch (error: unknown) {
-      const message = handleSupabaseError(error)
+      const message = handleSupabaseError(error);
       alert(message || "処理に失敗しました。");
     } finally {
       setLoading(false);
@@ -53,12 +54,12 @@ export const Auth = () => {
   };
 
   return (
-    <div className="auth-container">
+    <div className={style.authContainer}>
       <h2>{isLoginForm ? "ログイン" : "新規登録"}</h2>
 
-      <form onSubmit={handleAuth} className="auth-form">
+      <form onSubmit={handleAuth} className={style.authForm}>
         {!isLoginForm && (
-          <div className="form-row">
+          <div className={style.formRow}>
             <label htmlFor="username">ユーザー名</label>
             <input
               id="username"
@@ -69,7 +70,7 @@ export const Auth = () => {
             />
           </div>
         )}
-        <div className="form-row">
+        <div className={style.formRow}>
           <label htmlFor="email">メールアドレス</label>
           <input
             id="email"
@@ -79,7 +80,7 @@ export const Auth = () => {
             required
           />
         </div>
-        <div className="form-row">
+        <div className={style.formRow}>
           <label htmlFor="password">パスワード</label>
           <input
             id="password"
@@ -90,14 +91,14 @@ export const Auth = () => {
           />
         </div>
 
-        <div className="auth-actions">
+        <div className={style.formActions}>
           <button type="submit" disabled={loading}>
             {loading ? "処理中..." : isLoginForm ? "ログイン" : "登録する"}
           </button>
         </div>
       </form>
 
-      <div className="auth-toggle">
+      <div className={style.switchText}>
         {isLoginForm ? (
           <p>
             アカウントをお持ちではないですか？{" "}

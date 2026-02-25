@@ -11,14 +11,16 @@ type FishingLogItemProps = {
   onDelete: (log: FishingLogWithProfile) => void;
   onUpdate: (
     log: FishingLogWithProfile,
-    updateData: FishingLogFormData
+    updateData: FishingLogFormData,
   ) => void;
+  onRefresh: () => void;
 };
 
 export const FishingLogItem = ({
   log,
   onDelete,
   onUpdate,
+  onRefresh,
 }: FishingLogItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -34,60 +36,69 @@ export const FishingLogItem = ({
 
   return (
     <li key={log.id} className={styles.postCard}>
-      {isEditing ? (
+      <div className={styles.usernameHeader}>
+        {log.profiles && (
+          <span className={styles.username}>{log.profiles.username}</span>
+        )}
+      </div>
+      {/* 画像部分 */}
+      {log.image_url && (
+        <div
+          className={styles.imageWrapper}
+          onClick={() => setIsModalOpen(true)}
+        >
+          <img src={log.image_url} alt={log.fish_name} />
+        </div>
+      )}
+      {/* テキスト部分 */}
+      <div className={styles.postContent}>
+        <div className={styles.postmainInfo}>
+          <strong className={styles.fishName}>{log.fish_name}</strong>
+          {log.location && (
+            <span className={styles.locationTag}> @ {log.location}</span>
+          )}
+        </div>
+        <div className={styles.specInfo}>
+          {log.fish_size && <span>サイズ: ({log.fish_size} cm)</span>}
+          {log.fish_weight && <span>/ 重さ: {log.fish_weight} g</span>}
+        </div>
+        {log.comment && <p className={styles.contentText}>{log.comment}</p>}
+        {/* 自分の投稿だけ編集と削除 */}
+        {isOwnPost && (
+          <div className={styles.logActions}>
+            <button onClick={() => setIsEditing(true)}>編集</button>
+            <button
+              onClick={() => {
+                setIsDeleteDialogOpen(true);
+              }}
+            >
+              削除
+            </button>
+          </div>
+        )}
+      </div>
+      <div className={styles.reactionWrapper}>
+        <ReactionArea
+          targetId={log.id}
+          tableName="fishing_log_reactions"
+          targetColumn="log_id"
+          rawReactions={log.fishing_log_reactions}
+          onRefresh={onRefresh}
+        />
+      </div>
+      {/* 編集用ダイアログ */}
+      <Dialog
+        isOpen={isEditing}
+        onClose={() => setIsEditing(false)}
+        title="投稿の編集"
+      >
         <FishingLogEditForm
           log={log}
           onSave={handleSave}
           onCancel={() => setIsEditing(false)}
         />
-      ) : (
-        <>
-          <div className={styles.usernameHeader}>
-            {log.profiles && (
-              <span className={styles.username}>{log.profiles.username}</span>
-            )}
-          </div>
-          {/* 画像部分 */}
-          {log.image_url && (
-            <div
-              className={styles.imageWrapper}
-              onClick={() => setIsModalOpen(true)}
-            >
-              <img src={log.image_url} alt={log.fish_name} />
-            </div>
-          )}
-          {/* テキスト部分 */}
-          <div className={styles.postContent}>
-            <div className={styles.postmainInfo}>
-              <strong className={styles.fishName}>{log.fish_name}</strong>
-              {log.location && (
-                <span className={styles.locationTag}> @ {log.location}</span>
-              )}
-            </div>
-            <div className={styles.specInfo}>
-              {log.fish_size && <span>サイズ: ({log.fish_size} cm)</span>}
-              {log.fish_weight && <span>/ 重さ: {log.fish_weight} g</span>}
-            </div>
-            {log.comment && <p className={styles.contentText}>{log.comment}</p>}
-            {/* 自分の投稿だけ編集と削除 */}
-            {isOwnPost && (
-              <div className={styles.logActions}>
-                <button onClick={() => setIsEditing(true)}>編集</button>
-                <button
-                  onClick={() => {
-                    setIsDeleteDialogOpen(true);
-                  }}
-                >
-                  削除
-                </button>
-              </div>
-            )}
-          </div>
-          <div className={styles.reactionWrapper}>
-            <ReactionArea targetId={log.id} />
-          </div>
-        </>
-      )}
+      </Dialog>
+      {/* 画像拡大ダイアログ */}
       <Dialog isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div
           style={{
@@ -107,7 +118,7 @@ export const FishingLogItem = ({
           />
         </div>
       </Dialog>
-
+      {/* 削除確認ダイアログ */}
       <Dialog
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
